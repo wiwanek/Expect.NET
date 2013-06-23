@@ -8,7 +8,10 @@ namespace Expect
 {
     public abstract class Spawn
     {
+        public delegate void ExpectedHandler();
         public void send(string command) { }
-        public void expect(string query) { }
+        public void expect(string query, ExpectedHandler handler) { }
+
+        private Process process;
     }
 }

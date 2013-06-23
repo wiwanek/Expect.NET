@@ -7,7 +7,7 @@
     <ProjectGuid>{8AA52B5E-DB66-4B0B-AABA-9E6900BC3D5A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Expect.NET</RootNamespace>
+    <RootNamespace>Expect</RootNamespace>
     <AssemblyName>Expect.NET</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -39,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Process.cs" />
     <Compile Include="Spawn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpawnFactory.cs" />
