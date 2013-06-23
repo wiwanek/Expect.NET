@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Expect
 {
-    public class Spawn
+    public abstract class Spawn
     {
+        public void send(string command) { }
+        public void expect(string query) { }
     }
 }
