@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Expect
 {
-    interface Process
+    internal interface Process
     {
         void write(string command);
-        async Task<string> readAsync();
+        Task<string> readAsync();
 
     }
 }

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Expect.NET")]
+[assembly: AssemblyTitle("Expect.Test")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Expect.NET")]
+[assembly: AssemblyProduct("Expect.Test")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,12 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("396eff6b-a0d9-4e2c-97bd-abce656dadda")]
-
-
-[assembly: InternalsVisibleTo("Expect.Test")]
-[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
-
+[assembly: Guid("45916282-784b-424c-a5b0-2e23029a48ee")]
 
 // Version information for an assembly consists of the following four values:
 //
