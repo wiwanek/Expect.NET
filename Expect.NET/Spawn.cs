@@ -16,15 +16,22 @@ namespace Expect
 
         public delegate void ExpectedHandler();
         public void send(string command) { process.write(command); }
-        public void expect(string query, ExpectedHandler handler) 
+        async public void expect(string query, ExpectedHandler handler) 
         {
-            Match match = Regex.Match(process.readAsync().Result, query);
-            if (match.Success)
+            output = "";
+            bool expectedQueryFound = false;
+            while (!expectedQueryFound)
             {
-                handler();
+                output += await process.readAsync();
+                expectedQueryFound = Regex.Match(output, query).Success;
+                if (expectedQueryFound)
+                {
+                    handler();
+                }
             }
         }
 
         private Process process;
+        private string output;
     }
 }

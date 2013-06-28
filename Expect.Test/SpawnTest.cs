@@ -47,7 +47,7 @@ namespace Expect.Test
             tasks[0].Start();
             tasks[1].Start();
 
-            proc.Setup(p => p.readAsync()).Returns(() => tasks[i]).Callback(() => i++);
+            proc.Setup(p => p.readAsync()).Callback(() => Thread.Sleep(100)).Returns(() => tasks[i]).Callback(() => i++);
             Spawn spawn = new Spawn(proc.Object);
             bool funcCalled = false;
 
