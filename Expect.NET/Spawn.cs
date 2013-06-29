@@ -16,17 +16,26 @@ namespace Expect
 
         public delegate void ExpectedHandler();
         public void send(string command) { process.write(command); }
-        async public void expect(string query, ExpectedHandler handler) 
+        async public Task expect(string query, ExpectedHandler handler) 
         {
+            Task timeout = Task.Delay(500);
             output = "";
             bool expectedQueryFound = false;
             while (!expectedQueryFound)
             {
-                output += await process.readAsync();
-                expectedQueryFound = Regex.Match(output, query).Success;
-                if (expectedQueryFound)
+                Task<string> task = process.readAsync();
+                if (task == await Task.WhenAny(task, timeout))
                 {
-                    handler();
+                    output += await task;
+                    expectedQueryFound = Regex.Match(output, query).Success;
+                    if (expectedQueryFound)
+                    {
+                        handler();
+                    }
+                }
+                else
+                {
+                    throw new TimeoutException();
                 }
             }
         }
