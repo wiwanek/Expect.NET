@@ -15,8 +15,13 @@ namespace Expect
         }
 
         public delegate void ExpectedHandler();
+        public delegate void ExpectedHandlerWithOutput(string output);
         public void send(string command) { process.write(command); }
-        async public Task expect(string query, ExpectedHandler handler) 
+        async public Task expect(string query, ExpectedHandler handler)
+        {
+            await expect(query, (s) => handler());
+        }
+        async public Task expect(string query, ExpectedHandlerWithOutput handler) 
         {
             Task timeout = Task.Delay(500);
             output = "";
@@ -30,7 +35,7 @@ namespace Expect
                     expectedQueryFound = Regex.Match(output, query).Success;
                     if (expectedQueryFound)
                     {
-                        handler();
+                        handler(output);
                     }
                 }
                 else

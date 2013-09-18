@@ -36,6 +36,21 @@ namespace Expect.Test
         }
 
         [TestMethod]
+        public async Task BasicExpectWithOutputTest()
+        {
+            var proc = new Mock<Process>();
+            proc.Setup(p => p.readAsync()).Returns(ReturnStringAfterDelay("test expected string test", 10));
+            Spawn spawn = new Spawn(proc.Object);
+            bool funcCalled = false;
+
+            string output = "";
+            await spawn.expect("expected string", (s) => {funcCalled = true; output = s;});
+
+            Assert.IsTrue(funcCalled);
+            Assert.AreEqual("test expected string test", output);
+        }
+
+        [TestMethod]
         public async Task SplitResultExpectTest()
         {
             var proc = new Mock<Process>();
@@ -50,6 +65,25 @@ namespace Expect.Test
 
             Assert.IsTrue(funcCalled);
             Assert.AreEqual(2, i);
+        }
+
+        [TestMethod]
+        public async Task SplitResultExpectWitOutputTest()
+        {
+            var proc = new Mock<Process>();
+            int i = 0;
+            Task<string>[] tasks = {ReturnStringAfterDelay("test expected ", 100), 
+                                     ReturnStringAfterDelay("string test", 150)};
+            proc.Setup(p => p.readAsync()).Returns(() => tasks[i]).Callback(() => i++);
+            Spawn spawn = new Spawn(proc.Object);
+            bool funcCalled = false;
+            string output = "";
+
+            await spawn.expect("expected string", (s) => { funcCalled = true; output = s; });
+
+            Assert.IsTrue(funcCalled);
+            Assert.AreEqual(2, i);
+            Assert.AreEqual("test expected string test", output);
         }
 
         private async Task<string> ReturnStringAfterDelay(string s, int delayInMs)
