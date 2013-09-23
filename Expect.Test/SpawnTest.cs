@@ -115,9 +115,10 @@ namespace Expect.Test
             var proc = new Mock<Process>();
             proc.Setup(p => p.readAsync()).Returns(ReturnStringAfterDelay("test expected string test", 1200));
             Spawn spawn = new Spawn(proc.Object);
+            spawn.setTimeout(500);
             Exception exc = null;
             bool funcCalled = false;
-            
+
             try
             {
                 await spawn.expect("expected string", () => funcCalled = true);
@@ -132,5 +133,70 @@ namespace Expect.Test
             Assert.IsFalse(funcCalled);
         }
 
+        [TestMethod]
+        public async Task TimeoutNotThrownExpectTest()
+        {
+            var proc = new Mock<Process>();
+            proc.Setup(p => p.readAsync()).Returns(ReturnStringAfterDelay("test expected string test", 1200));
+            Spawn spawn = new Spawn(proc.Object);
+            spawn.setTimeout(2400);
+            Exception exc = null;
+            bool funcCalled = false;
+
+            try
+            {
+                await spawn.expect("expected string", () => funcCalled = true);
+            }
+            catch (Exception e)
+            {
+                exc = e;
+            }
+
+            Assert.IsNull(exc);
+            Assert.IsTrue(funcCalled);
+        }
+
+        [TestMethod]
+        public void SetGetTimeout2400Test()
+        {
+            var proc = new Mock<Process>();
+            Spawn spawn = new Spawn(proc.Object);
+            spawn.setTimeout(2400);
+            Assert.AreEqual(2400, spawn.getTimeout());
+        }
+
+        [TestMethod]
+        public void SetGetTimeout200Test()
+        {
+            var proc = new Mock<Process>();
+            Spawn spawn = new Spawn(proc.Object);
+            spawn.setTimeout(200);
+            Assert.AreEqual(200, spawn.getTimeout());
+        }
+
+        [TestMethod]
+        public void SetGetTimeoutIncorrectValueTest()
+        {
+            var proc = new Mock<Process>();
+            Spawn spawn = new Spawn(proc.Object);
+            Exception exc = null;
+            ArgumentOutOfRangeException aoorexc = null;
+            try
+            {
+                spawn.setTimeout(-1);
+            }
+            catch (ArgumentOutOfRangeException aoore)
+            {
+                aoorexc = aoore;
+            }
+            catch (Exception e)
+            {
+                exc = e;
+            }
+
+            Assert.IsNull(exc);
+            Assert.IsNotNull(aoorexc);
+            Assert.AreEqual("timeout", aoorexc.ParamName);
+        }
     }
 }

@@ -23,13 +23,23 @@ namespace Expect
         }
         async public Task expect(string query, ExpectedHandlerWithOutput handler) 
         {
-            Task timeout = Task.Delay(500);
+            Task timeoutTask = null;
+            if (timeout > 0)
+            {
+                timeoutTask = Task.Delay(timeout);
+            }
             output = "";
             bool expectedQueryFound = false;
             while (!expectedQueryFound)
             {
                 Task<string> task = process.readAsync();
-                if (task == await Task.WhenAny(task, timeout))
+                IList<Task> tasks = new List<Task>();
+                tasks.Add(task);
+                if (timeoutTask != null)
+                {
+                    tasks.Add(timeoutTask);
+                }
+                if (task == await Task.WhenAny(tasks))
                 {
                     output += await task;
                     expectedQueryFound = Regex.Match(output, query).Success;
@@ -45,7 +55,23 @@ namespace Expect
             }
         }
 
+        public int getTimeout()
+        {
+            return timeout;
+        }
+
+        public void setTimeout(int timeout)
+        {
+            if (timeout <= 0)
+            {
+                throw new ArgumentOutOfRangeException("timeout", "Value must be larger than zero");
+            }
+            this.timeout = timeout;
+        }
+
         private Process process;
         private string output;
+        private int timeout = 500;
+
     }
 }
