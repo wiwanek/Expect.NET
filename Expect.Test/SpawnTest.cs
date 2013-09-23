@@ -86,6 +86,23 @@ namespace Expect.Test
             Assert.AreEqual("test expected string test", output);
         }
 
+        [TestMethod]
+        public async Task SendResetOutputTest()
+        {
+            var proc = new Mock<Process>();
+            int i = 0;
+            Task<string>[] tasks = {ReturnStringAfterDelay("test expected ", 100), 
+                                     ReturnStringAfterDelay("string test", 150),
+                                   ReturnStringAfterDelay("next expected string", 100)};
+            proc.Setup(p => p.readAsync()).Returns(() => tasks[i]).Callback(() => i++);
+            Spawn spawn = new Spawn(proc.Object);
+            string output = "";
+
+            await spawn.expect("expected string", (s) => { spawn.send("test");});
+            await spawn.expect("next expected", (s) => { output = s; });
+            Assert.AreEqual("next expected string", output);
+        }
+
         private async Task<string> ReturnStringAfterDelay(string s, int delayInMs)
         {
             await Task.Delay(delayInMs);
