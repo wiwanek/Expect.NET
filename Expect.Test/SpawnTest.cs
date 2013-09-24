@@ -13,7 +13,7 @@ namespace Expect.Test
         [TestMethod]
         public void SendTest()
         {
-            var proc = new Mock<Process>();
+            var proc = new Mock<ProcessHandler>();
             Spawn spawn = new Spawn(proc.Object);
             string command = "test command";
 
@@ -25,7 +25,7 @@ namespace Expect.Test
         [TestMethod]
         public async Task BasicExpectTest()
         {
-            var proc = new Mock<Process>();
+            var proc = new Mock<ProcessHandler>();
             proc.Setup(p => p.readAsync()).Returns(ReturnStringAfterDelay("test expected string test", 10));
             Spawn spawn = new Spawn(proc.Object);
             bool funcCalled = false;
@@ -38,7 +38,7 @@ namespace Expect.Test
         [TestMethod]
         public async Task BasicExpectWithOutputTest()
         {
-            var proc = new Mock<Process>();
+            var proc = new Mock<ProcessHandler>();
             proc.Setup(p => p.readAsync()).Returns(ReturnStringAfterDelay("test expected string test", 10));
             Spawn spawn = new Spawn(proc.Object);
             bool funcCalled = false;
@@ -53,7 +53,7 @@ namespace Expect.Test
         [TestMethod]
         public async Task SplitResultExpectTest()
         {
-            var proc = new Mock<Process>();
+            var proc = new Mock<ProcessHandler>();
             int i = 0;
             Task<string>[] tasks = {ReturnStringAfterDelay("test expected ", 100), 
                                      ReturnStringAfterDelay("string test", 150)};
@@ -70,7 +70,7 @@ namespace Expect.Test
         [TestMethod]
         public async Task SplitResultExpectWitOutputTest()
         {
-            var proc = new Mock<Process>();
+            var proc = new Mock<ProcessHandler>();
             int i = 0;
             Task<string>[] tasks = {ReturnStringAfterDelay("test expected ", 100), 
                                      ReturnStringAfterDelay("string test", 150)};
@@ -89,7 +89,7 @@ namespace Expect.Test
         [TestMethod]
         public async Task SendResetOutputTest()
         {
-            var proc = new Mock<Process>();
+            var proc = new Mock<ProcessHandler>();
             int i = 0;
             Task<string>[] tasks = {ReturnStringAfterDelay("test expected ", 100), 
                                      ReturnStringAfterDelay("string test", 150),
@@ -112,7 +112,7 @@ namespace Expect.Test
         [TestMethod]
         public async Task TimeoutThrownExpectTest()
         {
-            var proc = new Mock<Process>();
+            var proc = new Mock<ProcessHandler>();
             proc.Setup(p => p.readAsync()).Returns(ReturnStringAfterDelay("test expected string test", 1200));
             Spawn spawn = new Spawn(proc.Object);
             spawn.setTimeout(500);
@@ -136,7 +136,7 @@ namespace Expect.Test
         [TestMethod]
         public async Task TimeoutNotThrownExpectTest()
         {
-            var proc = new Mock<Process>();
+            var proc = new Mock<ProcessHandler>();
             proc.Setup(p => p.readAsync()).Returns(ReturnStringAfterDelay("test expected string test", 1200));
             Spawn spawn = new Spawn(proc.Object);
             spawn.setTimeout(2400);
@@ -159,7 +159,7 @@ namespace Expect.Test
         [TestMethod]
         public void SetGetTimeout2400Test()
         {
-            var proc = new Mock<Process>();
+            var proc = new Mock<ProcessHandler>();
             Spawn spawn = new Spawn(proc.Object);
             spawn.setTimeout(2400);
             Assert.AreEqual(2400, spawn.getTimeout());
@@ -168,7 +168,7 @@ namespace Expect.Test
         [TestMethod]
         public void SetGetTimeout200Test()
         {
-            var proc = new Mock<Process>();
+            var proc = new Mock<ProcessHandler>();
             Spawn spawn = new Spawn(proc.Object);
             spawn.setTimeout(200);
             Assert.AreEqual(200, spawn.getTimeout());
@@ -177,7 +177,7 @@ namespace Expect.Test
         [TestMethod]
         public void SetGetTimeoutIncorrectValueTest()
         {
-            var proc = new Mock<Process>();
+            var proc = new Mock<ProcessHandler>();
             Spawn spawn = new Spawn(proc.Object);
             Exception exc = null;
             ArgumentOutOfRangeException aoorexc = null;

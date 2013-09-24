@@ -40,7 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Process.cs" />
+    <Compile Include="LocalAppProcessHandler.cs" />
+    <Compile Include="ProcessHandler.cs" />
     <Compile Include="Spawn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpawnFactory.cs" />

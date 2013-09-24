@@ -9,7 +9,7 @@ namespace Expect
 {
     public class Spawn
     {
-        internal Spawn(Process process)
+        internal Spawn(ProcessHandler process)
         {
             this.process = process;
         }
@@ -69,7 +69,7 @@ namespace Expect
             this.timeout = timeout;
         }
 
-        private Process process;
+        private ProcessHandler process;
         private string output;
         private int timeout = 500;
 
