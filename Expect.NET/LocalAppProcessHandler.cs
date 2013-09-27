@@ -9,11 +9,23 @@ namespace Expect
 {
     internal class LocalAppProcessHandler : ProcessHandler
     {
-        internal Process Process { get; private set; }
+        internal ProcessWrapper ProcessWrapper { get; private set; }
 
-        internal LocalAppProcessHandler(Process process)
+        internal LocalAppProcessHandler(ProcessWrapper process)
         {
-            throw new NotImplementedException();
+            if (process.Process.StartInfo.FileName == null || process.Process.StartInfo.FileName.Length == 0)
+            {
+                throw new ArgumentException("FileName cannot be empty string", "process.StartInfo.FileName");
+            }
+
+            ProcessWrapper = process;
+
+            ProcessWrapper.Process.StartInfo.UseShellExecute = false;
+            ProcessWrapper.Process.StartInfo.RedirectStandardInput = true;
+            ProcessWrapper.Process.StartInfo.RedirectStandardError = true;
+            ProcessWrapper.Process.StartInfo.RedirectStandardOutput = true;
+
+            process.Start();
         }
 
         public void write(string command)

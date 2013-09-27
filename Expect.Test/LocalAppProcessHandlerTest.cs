@@ -11,14 +11,15 @@ namespace Expect.Test
         [TestMethod]
         public void CtorEmptyFileNameTest()
         {
+            var pw = new Mock<ProcessWrapper>();
             Process p = new Process();
             p.StartInfo.FileName = "";
-
+            pw.Setup(proc => proc.Process).Returns(p);
             Exception exc = null;
 
             try
             {
-                LocalAppProcessHandler t = new LocalAppProcessHandler(p);
+                LocalAppProcessHandler t = new LocalAppProcessHandler(pw.Object);
             }
             catch (Exception e)
             {
@@ -33,14 +34,16 @@ namespace Expect.Test
         [TestMethod]
         public void CtorNullFileNameTest()
         {
+            var pw = new Mock<ProcessWrapper>();
             Process p = new Process();
-            p.StartInfo.FileName = null;
+            p.StartInfo.FileName = "";
+            pw.Setup(proc => proc.Process).Returns(p);
 
             Exception exc = null;
 
             try
             {
-                LocalAppProcessHandler t = new LocalAppProcessHandler(p);
+                LocalAppProcessHandler t = new LocalAppProcessHandler(pw.Object);
             }
             catch (Exception e)
             {
@@ -55,190 +58,124 @@ namespace Expect.Test
         [TestMethod]
         public void CtorArgSetTest()
         {
+            var pw = new Mock<ProcessWrapper>();
             Process p = new Process();
             p.StartInfo.FileName = "test";
-
-            Exception exc = null;
+            pw.Setup(proc => proc.Process).Returns(p);
 
             LocalAppProcessHandler t = null;
-            try
-            {
-                t = new LocalAppProcessHandler(p);
-            }
-            catch (Exception e)
-            {
-                exc = e;
-            }
+            t = new LocalAppProcessHandler(pw.Object);
 
-            Assert.IsNull(exc);
             Assert.IsNotNull(t);
-            Assert.AreSame(p, t.Process);
+            Assert.AreSame(p, t.ProcessWrapper.Process);
         }
 
         [TestMethod]
         public void CtorFileNameNotChangedTest()
         {
+            var pw = new Mock<ProcessWrapper>();
             Process p = new Process();
             p.StartInfo.FileName = "test";
-
-            Exception exc = null;
+            pw.Setup(proc => proc.Process).Returns(p);
 
             LocalAppProcessHandler t = null;
-            try
-            {
-                t = new LocalAppProcessHandler(p);
-            }
-            catch (Exception e)
-            {
-                exc = e;
-            }
-
-            Assert.IsNull(exc);
+            t = new LocalAppProcessHandler(pw.Object);
             Assert.IsNotNull(t);
-            Assert.AreEqual("test", t.Process.StartInfo.FileName);
+            Assert.AreEqual("test", t.ProcessWrapper.Process.StartInfo.FileName);
         }
 
         [TestMethod]
         public void CtorArgumentsNotChangedTest()
         {
+            var pw = new Mock<ProcessWrapper>();
             Process p = new Process();
             p.StartInfo.FileName = "test";
             p.StartInfo.Arguments = "argtest";
-
-            Exception exc = null;
+            pw.Setup(proc => proc.Process).Returns(p);
 
             LocalAppProcessHandler t = null;
-            try
-            {
-                t = new LocalAppProcessHandler(p);
-            }
-            catch (Exception e)
-            {
-                exc = e;
-            }
+            t = new LocalAppProcessHandler(pw.Object);
 
-            Assert.IsNull(exc);
             Assert.IsNotNull(t);
-            Assert.AreEqual("argtest", t.Process.StartInfo.Arguments);
+            Assert.AreEqual("argtest", t.ProcessWrapper.Process.StartInfo.Arguments);
         }
 
         [TestMethod]
         public void CtorSetRedirectStdErrTest()
         {
+            var pw = new Mock<ProcessWrapper>();
             Process p = new Process();
             p.StartInfo.FileName = "test";
             p.StartInfo.RedirectStandardError = false;
-
-            Exception exc = null;
+            pw.Setup(proc => proc.Process).Returns(p);
 
             LocalAppProcessHandler t = null;
-            try
-            {
-                t = new LocalAppProcessHandler(p);
-            }
-            catch (Exception e)
-            {
-                exc = e;
-            }
-
-            Assert.IsNull(exc);
+            t = new LocalAppProcessHandler(pw.Object);
             Assert.IsNotNull(t);
-            Assert.IsTrue(t.Process.StartInfo.RedirectStandardError);
+            Assert.IsTrue(t.ProcessWrapper.Process.StartInfo.RedirectStandardError);
         }
 
         [TestMethod]
         public void CtorSetRedirectStdOutTest()
         {
+            var pw = new Mock<ProcessWrapper>();
             Process p = new Process();
             p.StartInfo.FileName = "test";
             p.StartInfo.RedirectStandardOutput = false;
-
-            Exception exc = null;
+            pw.Setup(proc => proc.Process).Returns(p);
 
             LocalAppProcessHandler t = null;
-            try
-            {
-                t = new LocalAppProcessHandler(p);
-            }
-            catch (Exception e)
-            {
-                exc = e;
-            }
-
-            Assert.IsNull(exc);
+            t = new LocalAppProcessHandler(pw.Object);
             Assert.IsNotNull(t);
-            Assert.IsTrue(t.Process.StartInfo.RedirectStandardOutput);
+            Assert.IsTrue(t.ProcessWrapper.Process.StartInfo.RedirectStandardOutput);
         }
 
         [TestMethod]
         public void CtorSetRedirectStdInTest()
         {
+            var pw = new Mock<ProcessWrapper>();
             Process p = new Process();
             p.StartInfo.FileName = "test";
             p.StartInfo.RedirectStandardInput = false;
-
-            Exception exc = null;
+            pw.Setup(proc => proc.Process).Returns(p);
 
             LocalAppProcessHandler t = null;
-            try
-            {
-                t = new LocalAppProcessHandler(p);
-            }
-            catch (Exception e)
-            {
-                exc = e;
-            }
-
-            Assert.IsNull(exc);
+            t = new LocalAppProcessHandler(pw.Object);
             Assert.IsNotNull(t);
-            Assert.IsTrue(t.Process.StartInfo.RedirectStandardInput);
+            Assert.IsTrue(t.ProcessWrapper.Process.StartInfo.RedirectStandardInput);
         }
 
         [TestMethod]
         public void CtorSetUseShellExecuteTest()
         {
+            var pw = new Mock<ProcessWrapper>();
             Process p = new Process();
             p.StartInfo.FileName = "test";
             p.StartInfo.UseShellExecute = true;
-
-            Exception exc = null;
+            pw.Setup(proc => proc.Process).Returns(p);
 
             LocalAppProcessHandler t = null;
-            try
-            {
-                t = new LocalAppProcessHandler(p);
-            }
-            catch (Exception e)
-            {
-                exc = e;
-            }
-
-            Assert.IsNull(exc);
+            t = new LocalAppProcessHandler(pw.Object);
             Assert.IsNotNull(t);
-            Assert.IsFalse(t.Process.StartInfo.UseShellExecute);
+            Assert.IsFalse(t.ProcessWrapper.Process.StartInfo.UseShellExecute);
         }
 
         [TestMethod]
         public void CtorStartCalledTest()
         {
-            var proc = new Mock<Process>();
-            ProcessStartInfo si = new ProcessStartInfo("test");
-            proc.Setup(p => p.StartInfo).Returns(si);
-            Exception exc = null;
+            var pw = new Mock<ProcessWrapper>();
+            Process p = new Process();
+            p.StartInfo.FileName = "test";
+            pw.Setup(proc => proc.Process).Returns(p);
 
             LocalAppProcessHandler t = null;
-            try
-            {
-                t = new LocalAppProcessHandler(proc.Object);
-            }
-            catch (Exception e)
-            {
-                exc = e;
-            }
-
-            Assert.IsNull(exc);
+            t = new LocalAppProcessHandler(pw.Object);
             Assert.IsNotNull(t);
-            proc.Verify(p => p.Start(), Times.Once());
+            pw.Verify(proc => proc.Start(), Times.Once());
         }
+
     }
+
 }
+
+
