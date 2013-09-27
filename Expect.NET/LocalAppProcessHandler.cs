@@ -11,13 +11,9 @@ namespace Expect
     {
         internal Process Process { get; private set; }
 
-        internal LocalAppProcessHandler(string startApplicationCommand, string arguments)
+        internal LocalAppProcessHandler(Process process)
         {
-            //throw new NotImplementedException();
-        }
-
-        public LocalAppProcessHandler(string startApplicationCommand) : this(startApplicationCommand, "")
-        {
+            throw new NotImplementedException();
         }
 
         public void write(string command)
