@@ -42,7 +42,9 @@
   <ItemGroup>
     <Compile Include="LocalAppProcessHandler.cs" />
     <Compile Include="ProcessHandler.cs" />
-    <Compile Include="ProcessWrapper.cs" />
+    <Compile Include="ProcessAdapter.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Spawn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpawnFactory.cs" />

@@ -9,21 +9,21 @@ namespace Expect
 {
     internal class LocalAppProcessHandler : ProcessHandler
     {
-        internal ProcessWrapper ProcessWrapper { get; private set; }
+        internal ProcessAdapter ProcessAdapter { get; private set; }
 
-        internal LocalAppProcessHandler(ProcessWrapper process)
+        internal LocalAppProcessHandler(ProcessAdapter process)
         {
-            if (process.Process.StartInfo.FileName == null || process.Process.StartInfo.FileName.Length == 0)
+            if (process.StartInfo.FileName == null || process.StartInfo.FileName.Length == 0)
             {
                 throw new ArgumentException("FileName cannot be empty string", "process.StartInfo.FileName");
             }
 
-            ProcessWrapper = process;
+            ProcessAdapter = process;
 
-            ProcessWrapper.Process.StartInfo.UseShellExecute = false;
-            ProcessWrapper.Process.StartInfo.RedirectStandardInput = true;
-            ProcessWrapper.Process.StartInfo.RedirectStandardError = true;
-            ProcessWrapper.Process.StartInfo.RedirectStandardOutput = true;
+            ProcessAdapter.StartInfo.UseShellExecute = false;
+            ProcessAdapter.StartInfo.RedirectStandardInput = true;
+            ProcessAdapter.StartInfo.RedirectStandardError = true;
+            ProcessAdapter.StartInfo.RedirectStandardOutput = true;
 
             process.Start();
         }
