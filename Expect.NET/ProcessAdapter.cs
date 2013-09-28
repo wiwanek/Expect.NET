@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Expect
 {
-    // Stupid class to disable Start function in tests...
+    // Adapter class for mocking Process in tests...
     internal class ProcessAdapter : Process
     {
-        internal virtual ProcessStartInfo StartInfo { get; set; }
+        internal virtual new ProcessStartInfo StartInfo { get { return base.StartInfo; } set { base.StartInfo = value; } }
         internal virtual new bool Start() { return base.Start(); }
     }
 }
