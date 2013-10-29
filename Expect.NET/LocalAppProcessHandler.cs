@@ -9,33 +9,33 @@ namespace Expect
 {
     internal class LocalAppProcessHandler : ProcessHandler
     {
-        internal ProcessAdapter ProcessAdapter { get; private set; }
+        internal IProcess Process { get; private set; }
 
-        internal LocalAppProcessHandler(ProcessAdapter process)
+        internal LocalAppProcessHandler(IProcess process)
         {
             if (process.StartInfo.FileName == null || process.StartInfo.FileName.Length == 0)
             {
                 throw new ArgumentException("FileName cannot be empty string", "process.StartInfo.FileName");
             }
 
-            ProcessAdapter = process;
+            Process = process;
 
-            ProcessAdapter.StartInfo.UseShellExecute = false;
-            ProcessAdapter.StartInfo.RedirectStandardInput = true;
-            ProcessAdapter.StartInfo.RedirectStandardError = true;
-            ProcessAdapter.StartInfo.RedirectStandardOutput = true;
+            Process.StartInfo.UseShellExecute = false;
+            Process.StartInfo.RedirectStandardInput = true;
+            Process.StartInfo.RedirectStandardError = true;
+            Process.StartInfo.RedirectStandardOutput = true;
 
             process.Start();
         }
 
         public void write(string command)
         {
-            throw new NotImplementedException();
+            Process.Write(command);
         }
 
-        public Task<string> readAsync()
+        public async Task<string> readAsync()
         {
-            throw new NotImplementedException();
+            return await Process.ReadAsync();
         }
     }
 }

@@ -7,10 +7,31 @@ using System.Threading.Tasks;
 
 namespace Expect
 {
-    // Adapter class for mocking Process in tests...
-    internal class ProcessAdapter : Process
+    internal class ProcessAdapter : IProcess
     {
-        internal virtual new ProcessStartInfo StartInfo { get { return base.StartInfo; } set { base.StartInfo = value; } }
-        internal virtual new bool Start() { return base.Start(); }
+        private Process process;
+
+        ProcessAdapter(Process process)
+        {
+            this.process = process;
+        }
+
+        public ProcessStartInfo StartInfo { get { return process.StartInfo; } set { process.StartInfo = value; } }
+        public bool Start() { return process.Start(); }
+
+        public async Task<string> ReadAsync()
+        {
+            List<Task<string>> tasks = new List<Task<string>>();
+            tasks.Add(process.StandardError.ReadLineAsync());
+            tasks.Add(process.StandardOutput.ReadLineAsync());
+
+            Task<string> ret = await Task<string>.WhenAny<string>(tasks);
+            return await ret;
+        }
+
+        public void Write(string command)
+        {
+            process.StandardInput.Write(command);
+        }
     }
 }
