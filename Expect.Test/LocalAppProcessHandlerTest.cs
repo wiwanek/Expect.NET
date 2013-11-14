@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
 using Moq;
+using System.IO;
 
 namespace Expect.Test
 {
@@ -163,6 +164,21 @@ namespace Expect.Test
             pw.Verify(proc => proc.Start(), Times.Once());
         }
 
+        [TestMethod]
+        public void WriteTest()
+        {
+            var pw = new Mock<ProcessAdapter>();
+            ProcessStartInfo si = new ProcessStartInfo("test");
+            pw.Setup(proc => proc.StartInfo).Returns(si);
+
+            ProcessAdapter notepad = new ProcessAdapter();
+            notepad.StartInfo.FileName = "cmd.exe";
+
+            LocalAppProcessHandler ph = new LocalAppProcessHandler(notepad);
+            ph.write("test command\n");
+            
+            Assert.AreEqual("test command\n", new StreamReader(ph.input.BaseStream).ReadToEnd());
+        }
     }
 
 }

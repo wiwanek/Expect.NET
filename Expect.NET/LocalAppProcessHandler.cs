@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,8 +10,10 @@ namespace Expect
 {
     internal class LocalAppProcessHandler : ProcessHandler
     {
-        internal ProcessAdapter ProcessAdapter { get; private set; }
+        internal StreamWriter input; 
 
+        internal ProcessAdapter ProcessAdapter { get; private set; }
+        
         internal LocalAppProcessHandler(ProcessAdapter process)
         {
             if (process.StartInfo.FileName == null || process.StartInfo.FileName.Length == 0)
@@ -26,11 +29,15 @@ namespace Expect
             ProcessAdapter.StartInfo.RedirectStandardOutput = true;
 
             process.Start();
+
+            input = process.StandardInput;
+
+            
         }
 
         public void write(string command)
         {
-            throw new NotImplementedException();
+            input.Write(command);
         }
 
         public Task<string> readAsync()
