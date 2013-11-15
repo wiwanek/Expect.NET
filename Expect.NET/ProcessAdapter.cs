@@ -11,7 +11,7 @@ namespace Expect
     {
         private Process process;
 
-        ProcessAdapter(Process process)
+        internal ProcessAdapter(Process process)
         {
             this.process = process;
         }

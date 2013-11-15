@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SpawnCommand.cs" />
     <Compile Include="IProcess.cs" />
     <Compile Include="LocalAppProcessHandler.cs" />
     <Compile Include="ProcessHandler.cs" />
