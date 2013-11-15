@@ -10,8 +10,14 @@ namespace Expect
     class SpawnCommand : Spawn
     {
         SpawnCommand(string command)
-            : base(new LocalAppProcessHandler(new ProcessAdapter(new Process())))
+            : base(new CommandBackendFactory(command))
         {
         }
+
+        SpawnCommand(string command, string arguments)
+            : base(new CommandBackendFactory(command, arguments))
+        {
+        }
+
     }
 }

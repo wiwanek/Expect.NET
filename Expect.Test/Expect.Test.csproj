@@ -55,10 +55,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="LocalAppProcessHandlerTest.cs" />
     <Compile Include="SpawnTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SpawnFactoryTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

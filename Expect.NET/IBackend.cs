@@ -2,7 +2,7 @@
 
 namespace Expect
 {
-    internal interface ProcessHandler
+    internal interface IBackend
     {
         void write(string command);
         Task<string> readAsync();

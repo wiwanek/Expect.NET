@@ -7,14 +7,14 @@ namespace Expect
 {
     public class Spawn
     {
-        internal Spawn(ProcessHandler process)
+        internal Spawn(IBackendFactory backendFactory)
         {
-            this.process = process;
+            this.backend = backendFactory.createBackend();
         }
 
         public delegate void ExpectedHandler();
         public delegate void ExpectedHandlerWithOutput(string output);
-        public void send(string command) { process.write(command); }
+        public void send(string command) { backend.write(command); }
         async public Task expect(string query, ExpectedHandler handler)
         {
             await expect(query, (s) => handler());
@@ -30,7 +30,7 @@ namespace Expect
             bool expectedQueryFound = false;
             while (!expectedQueryFound)
             {
-                Task<string> task = process.readAsync();
+                Task<string> task = backend.readAsync();
                 IList<Task> tasks = new List<Task>();
                 tasks.Add(task);
                 if (timeoutTask != null)
@@ -67,7 +67,7 @@ namespace Expect
             this.timeout = timeout;
         }
 
-        private ProcessHandler process;
+        private IBackend backend;
         private string output;
         private int timeout = 500;
 
