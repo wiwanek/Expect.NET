@@ -26,6 +26,8 @@ namespace Expect
         {
             Process process = new Process();
 
+            process.StartInfo.FileName = command;
+            process.StartInfo.Arguments = arguments;
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardInput = true;
             process.StartInfo.RedirectStandardError = true;
