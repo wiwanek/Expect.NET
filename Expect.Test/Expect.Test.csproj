@@ -55,6 +55,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="CommandBackendTest.cs" />
     <Compile Include="SpawnTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
