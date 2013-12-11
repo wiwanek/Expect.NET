@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Expect
 {
-    class SpawnCommand : Spawn
+    public class SpawnCommand : Spawn
     {
-        SpawnCommand(string command)
+        public SpawnCommand(string command)
             : base(new CommandBackendFactory(command))
         {
         }
 
-        SpawnCommand(string command, string arguments)
+        public SpawnCommand(string command, string arguments)
             : base(new CommandBackendFactory(command, arguments))
         {
         }
