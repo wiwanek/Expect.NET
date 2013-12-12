@@ -25,7 +25,7 @@ namespace Expect.Test
         }
 
         [TestMethod]
-        public async Task BasicExpectTest()
+        public void BasicExpectTest()
         {
             var backend = new Mock<IBackend>();
             backend.Setup(p => p.readAsync()).Returns(ReturnStringAfterDelay("test expected string test", 10));
@@ -34,13 +34,13 @@ namespace Expect.Test
             Spawn spawn = new Spawn(bf.Object);
             bool funcCalled = false;
 
-            await spawn.expect("expected string", () => funcCalled = true);
+            spawn.expect("expected string", () => funcCalled = true);
 
             Assert.IsTrue(funcCalled);
         }
 
         [TestMethod]
-        public async Task BasicExpectWithOutputTest()
+        public void BasicExpectWithOutputTest()
         {
             var backend = new Mock<IBackend>();
             backend.Setup(p => p.readAsync()).Returns(ReturnStringAfterDelay("test expected string test", 10));
@@ -50,14 +50,14 @@ namespace Expect.Test
             bool funcCalled = false;
 
             string output = "";
-            await spawn.expect("expected string", (s) => { funcCalled = true; output = s; });
+            spawn.expect("expected string", (s) => { funcCalled = true; output = s; });
 
             Assert.IsTrue(funcCalled);
             Assert.AreEqual("test expected string test", output);
         }
 
         [TestMethod]
-        public async Task SplitResultExpectTest()
+        public void SplitResultExpectTest()
         {
             var backend = new Mock<IBackend>();
             int i = 0;
@@ -69,14 +69,14 @@ namespace Expect.Test
             Spawn spawn = new Spawn(bf.Object);
             bool funcCalled = false;
             
-            await spawn.expect("expected string", () => funcCalled = true);
+            spawn.expect("expected string", () => funcCalled = true);
 
             Assert.IsTrue(funcCalled);
             Assert.AreEqual(2, i);
         }
 
         [TestMethod]
-        public async Task SplitResultExpectWitOutputTest()
+        public void SplitResultExpectWitOutputTest()
         {
             var backend = new Mock<IBackend>();
             int i = 0;
@@ -89,7 +89,7 @@ namespace Expect.Test
             bool funcCalled = false;
             string output = "";
 
-            await spawn.expect("expected string", (s) => { funcCalled = true; output = s; });
+            spawn.expect("expected string", (s) => { funcCalled = true; output = s; });
 
             Assert.IsTrue(funcCalled);
             Assert.AreEqual(2, i);
@@ -97,7 +97,7 @@ namespace Expect.Test
         }
 
         [TestMethod]
-        public async Task SendResetOutputTest()
+        public void SendResetOutputTest()
         {
             var backend = new Mock<IBackend>();
             int i = 0;
@@ -110,8 +110,8 @@ namespace Expect.Test
             Spawn spawn = new Spawn(bf.Object);
             string output = "";
 
-            await spawn.expect("expected string", (s) => { spawn.send("test"); });
-            await spawn.expect("next expected", (s) => { output = s; });
+            spawn.expect("expected string", (s) => { spawn.send("test"); });
+            spawn.expect("next expected", (s) => { output = s; });
             Assert.AreEqual("next expected string", output);
         }
 
@@ -122,7 +122,7 @@ namespace Expect.Test
         }
 
         [TestMethod]
-        public async Task TimeoutThrownExpectTest()
+        public void TimeoutThrownExpectTest()
         {
             var backend = new Mock<IBackend>();
             backend.Setup(p => p.readAsync()).Returns(ReturnStringAfterDelay("test expected string test", 1200));
@@ -135,7 +135,7 @@ namespace Expect.Test
 
             try
             {
-                await spawn.expect("expected string", () => funcCalled = true);
+                spawn.expect("expected string", () => funcCalled = true);
             }
             catch (Exception e)
             {
@@ -148,7 +148,7 @@ namespace Expect.Test
         }
 
         [TestMethod]
-        public async Task TimeoutNotThrownExpectTest()
+        public void TimeoutNotThrownExpectTest()
         {
             var backend = new Mock<IBackend>();
             backend.Setup(p => p.readAsync()).Returns(ReturnStringAfterDelay("test expected string test", 1200));
@@ -161,7 +161,7 @@ namespace Expect.Test
 
             try
             {
-                await spawn.expect("expected string", () => funcCalled = true);
+                spawn.expect("expected string", () => funcCalled = true);
             }
             catch (Exception e)
             {

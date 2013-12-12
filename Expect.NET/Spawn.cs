@@ -15,11 +15,11 @@ namespace Expect
         public delegate void ExpectedHandler();
         public delegate void ExpectedHandlerWithOutput(string output);
         public void send(string command) { backend.write(command); }
-        async public Task expect(string query, ExpectedHandler handler)
+        public void expect(string query, ExpectedHandler handler)
         {
-            await expect(query, (s) => handler());
+            expect(query, (s) => handler());
         }
-        async public Task expect(string query, ExpectedHandlerWithOutput handler) 
+        public void expect(string query, ExpectedHandlerWithOutput handler) 
         {
             Task timeoutTask = null;
             if (timeout > 0)
@@ -37,9 +37,12 @@ namespace Expect
                 {
                     tasks.Add(timeoutTask);
                 }
-                if (task == await Task.WhenAny(tasks))
+                Task<Task> any = Task.WhenAny(tasks);
+                any.Wait();
+                if (task == any.Result)
                 {
-                    output += await task;
+                    task.Wait();
+                    output += task.Result;
                     expectedQueryFound = Regex.Match(output, query).Success;
                     if (expectedQueryFound)
                     {
@@ -69,7 +72,7 @@ namespace Expect
 
         private IBackend backend;
         private string output;
-        private int timeout = 500;
+        private int timeout = 2500;
 
     }
 }
