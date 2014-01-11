@@ -8,6 +8,6 @@ namespace Expect
 {
     internal interface IBackendFactory
     {
-        IBackend createBackend();
+        IBackend CreateBackend();
     }
 }

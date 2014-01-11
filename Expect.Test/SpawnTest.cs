@@ -19,7 +19,7 @@ namespace Expect.Test
             Spawn spawn = new Spawn(bf.Object);
             string command = "test command";
 
-            spawn.send(command);
+            spawn.Send(command);
 
             backend.Verify(p => p.write(command));
         }
@@ -34,7 +34,7 @@ namespace Expect.Test
             Spawn spawn = new Spawn(bf.Object);
             bool funcCalled = false;
 
-            spawn.expect("expected string", () => funcCalled = true);
+            spawn.Expect("expected string", () => funcCalled = true);
 
             Assert.IsTrue(funcCalled);
         }
@@ -50,7 +50,7 @@ namespace Expect.Test
             bool funcCalled = false;
 
             string output = "";
-            spawn.expect("expected string", (s) => { funcCalled = true; output = s; });
+            spawn.Expect("expected string", (s) => { funcCalled = true; output = s; });
 
             Assert.IsTrue(funcCalled);
             Assert.AreEqual("test expected string test", output);
@@ -69,7 +69,7 @@ namespace Expect.Test
             Spawn spawn = new Spawn(bf.Object);
             bool funcCalled = false;
             
-            spawn.expect("expected string", () => funcCalled = true);
+            spawn.Expect("expected string", () => funcCalled = true);
 
             Assert.IsTrue(funcCalled);
             Assert.AreEqual(2, i);
@@ -89,7 +89,7 @@ namespace Expect.Test
             bool funcCalled = false;
             string output = "";
 
-            spawn.expect("expected string", (s) => { funcCalled = true; output = s; });
+            spawn.Expect("expected string", (s) => { funcCalled = true; output = s; });
 
             Assert.IsTrue(funcCalled);
             Assert.AreEqual(2, i);
@@ -110,8 +110,8 @@ namespace Expect.Test
             Spawn spawn = new Spawn(bf.Object);
             string output = "";
 
-            spawn.expect("expected string", (s) => { spawn.send("test"); });
-            spawn.expect("next expected", (s) => { output = s; });
+            spawn.Expect("expected string", (s) => { spawn.Send("test"); });
+            spawn.Expect("next expected", (s) => { output = s; });
             Assert.AreEqual("next expected string", output);
         }
 
@@ -135,7 +135,7 @@ namespace Expect.Test
 
             try
             {
-                spawn.expect("expected string", () => funcCalled = true);
+                spawn.Expect("expected string", () => funcCalled = true);
             }
             catch (Exception e)
             {
@@ -161,7 +161,7 @@ namespace Expect.Test
 
             try
             {
-                spawn.expect("expected string", () => funcCalled = true);
+                spawn.Expect("expected string", () => funcCalled = true);
             }
             catch (Exception e)
             {
@@ -218,7 +218,7 @@ namespace Expect.Test
 
             Assert.IsNull(exc);
             Assert.IsNotNull(aoorexc);
-            Assert.AreEqual("timeout", aoorexc.ParamName);
+            Assert.AreEqual("_timeout", aoorexc.ParamName);
         }
     }
 }

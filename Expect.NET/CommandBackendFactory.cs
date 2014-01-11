@@ -9,25 +9,25 @@ namespace Expect
 {
     class CommandBackendFactory : IBackendFactory
     {
-        private string command;
-        private string arguments;
+        private string _command;
+        private string _arguments;
 
         internal CommandBackendFactory(string command, string arguments)
         {
-            this.command = command;
-            this.arguments = arguments;
+            _command = command;
+            _arguments = arguments;
         }
 
         internal CommandBackendFactory(string command) : this(command, "")
         {
         }
 
-        public IBackend createBackend()
+        public IBackend CreateBackend()
         {
             Process process = new Process();
 
-            process.StartInfo.FileName = command;
-            process.StartInfo.Arguments = arguments;
+            process.StartInfo.FileName = _command;
+            process.StartInfo.Arguments = _arguments;
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardInput = true;
             process.StartInfo.RedirectStandardError = true;

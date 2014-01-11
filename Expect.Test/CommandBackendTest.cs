@@ -26,7 +26,7 @@ namespace Expect.Test
 
             Assert.IsNotNull(caughtException);
             Assert.IsInstanceOfType(caughtException, typeof(ArgumentException));
-            Assert.AreEqual("process.StartInfo.FileName", (caughtException as ArgumentException).ParamName);
+            Assert.AreEqual("_process.StartInfo.FileName", (caughtException as ArgumentException).ParamName);
 
         }
 
@@ -48,7 +48,7 @@ namespace Expect.Test
 
             Assert.IsNotNull(caughtException);
             Assert.IsInstanceOfType(caughtException, typeof(ArgumentException));
-            Assert.AreEqual("process.StartInfo.FileName", (caughtException as ArgumentException).ParamName);
+            Assert.AreEqual("_process.StartInfo.FileName", (caughtException as ArgumentException).ParamName);
 
         }
 

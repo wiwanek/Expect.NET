@@ -9,28 +9,28 @@ namespace Expect
     {
         internal Spawn(IBackendFactory backendFactory)
         {
-            this.backend = backendFactory.createBackend();
+            _backend = backendFactory.CreateBackend();
         }
 
         public delegate void ExpectedHandler();
         public delegate void ExpectedHandlerWithOutput(string output);
-        public void send(string command) { backend.write(command); }
-        public void expect(string query, ExpectedHandler handler)
+        public void Send(string command) { _backend.Write(command); }
+        public void Expect(string query, ExpectedHandler handler)
         {
-            expect(query, (s) => handler());
+            Expect(query, (s) => handler());
         }
-        public void expect(string query, ExpectedHandlerWithOutput handler) 
+        public void Expect(string query, ExpectedHandlerWithOutput handler) 
         {
             Task timeoutTask = null;
-            if (timeout > 0)
+            if (_timeout > 0)
             {
-                timeoutTask = Task.Delay(timeout);
+                timeoutTask = Task.Delay(_timeout);
             }
-            output = "";
+            _output = "";
             bool expectedQueryFound = false;
             while (!expectedQueryFound)
             {
-                Task<string> task = backend.readAsync();
+                Task<string> task = _backend.ReadAsync();
                 IList<Task> tasks = new List<Task>();
                 tasks.Add(task);
                 if (timeoutTask != null)
@@ -42,11 +42,11 @@ namespace Expect
                 if (task == any.Result)
                 {
                     task.Wait();
-                    output += task.Result;
-                    expectedQueryFound = Regex.Match(output, query).Success;
+                    _output += task.Result;
+                    expectedQueryFound = Regex.Match(_output, query).Success;
                     if (expectedQueryFound)
                     {
-                        handler(output);
+                        handler(_output);
                     }
                 }
                 else
@@ -58,7 +58,7 @@ namespace Expect
 
         public int getTimeout()
         {
-            return timeout;
+            return _timeout;
         }
 
         public void setTimeout(int timeout)
@@ -67,12 +67,12 @@ namespace Expect
             {
                 throw new ArgumentOutOfRangeException("timeout", "Value must be larger than zero");
             }
-            this.timeout = timeout;
+            _timeout = timeout;
         }
 
-        private IBackend backend;
-        private string output;
-        private int timeout = 2500;
+        private IBackend _backend;
+        private string _output;
+        private int _timeout = 2500;
 
     }
 }

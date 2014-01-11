@@ -4,8 +4,8 @@ namespace Expect
 {
     internal interface IBackend
     {
-        void write(string command);
-        Task<string> readAsync();
+        void Write(string command);
+        Task<string> ReadAsync();
 
     }
 }

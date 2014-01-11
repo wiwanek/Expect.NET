@@ -9,42 +9,42 @@ namespace Expect
 {
     internal class CommandBackend : IBackend
     {
-        private Process process;
-        private Task<string> errorRead = null;
-        private Task<string> stdRead = null;
+        private Process _process;
+        private Task<string> _errorRead = null;
+        private Task<string> _stdRead = null;
                
             
         internal CommandBackend(Process process)
         {
             if (process.StartInfo.FileName == null || process.StartInfo.FileName.Length == 0)
             {
-                throw new ArgumentException("FileName cannot be empty string", "process.StartInfo.FileName");
+                throw new ArgumentException("FileName cannot be empty string", "_process.StartInfo.FileName");
             }
 
-            this.process = process;
+            _process = process;
             
        }
 
-        public void write(string command)
+        public void Write(string command)
         {
-            if (errorRead == null || errorRead.IsCanceled || errorRead.IsCompleted || errorRead.IsFaulted)
+            if (_errorRead == null || _errorRead.IsCanceled || _errorRead.IsCompleted || _errorRead.IsFaulted)
             {
-                process.StandardError.DiscardBufferedData();
+                _process.StandardError.DiscardBufferedData();
             }
-            if (stdRead == null || stdRead.IsCanceled || stdRead.IsCompleted || stdRead.IsFaulted)
+            if (_stdRead == null || _stdRead.IsCanceled || _stdRead.IsCompleted || _stdRead.IsFaulted)
             {
-                process.StandardOutput.DiscardBufferedData();
+                _process.StandardOutput.DiscardBufferedData();
             }
-            process.StandardInput.Write(command);
+            _process.StandardInput.Write(command);
         }
 
-        public async Task<string> readAsync()
+        public async Task<string> ReadAsync()
         {
             List<Task<string>> tasks = new List<Task<string>>();
             RecreateErrorReadTask();
             RecreateStdReadTask();
-            tasks.Add(errorRead);
-            tasks.Add(stdRead);
+            tasks.Add(_errorRead);
+            tasks.Add(_stdRead);
 
             var ret = await Task<string>.WhenAny<string>(tasks);
             return await ret;
@@ -52,19 +52,19 @@ namespace Expect
 
         private void RecreateErrorReadTask()
         {
-            if (errorRead == null || errorRead.IsCanceled || errorRead.IsCompleted || errorRead.IsFaulted)
+            if (_errorRead == null || _errorRead.IsCanceled || _errorRead.IsCompleted || _errorRead.IsFaulted)
             {
                 char[] tmp = new char[256];
-                errorRead = CreateStringAsync(tmp, process.StandardError.ReadAsync(tmp, 0, 256));
+                _errorRead = CreateStringAsync(tmp, _process.StandardError.ReadAsync(tmp, 0, 256));
             }
         }
 
         private void RecreateStdReadTask()
         {
-            if (stdRead == null || stdRead.IsCanceled || stdRead.IsCompleted || stdRead.IsFaulted)
+            if (_stdRead == null || _stdRead.IsCanceled || _stdRead.IsCompleted || _stdRead.IsFaulted)
             {
                 char[] tmp = new char[256];
-                stdRead = CreateStringAsync(tmp, process.StandardOutput.ReadAsync(tmp, 0, 256));
+                _stdRead = CreateStringAsync(tmp, _process.StandardOutput.ReadAsync(tmp, 0, 256));
             }
         }
 
