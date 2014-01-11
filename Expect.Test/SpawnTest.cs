@@ -15,22 +15,22 @@ namespace Expect.Test
         {
             var backend = new Mock<IBackend>();
             var bf = new Mock<IBackendFactory>();
-            bf.Setup<IBackend>(foo => foo.createBackend()).Returns(backend.Object);
+            bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
             Spawn spawn = new Spawn(bf.Object);
             string command = "test command";
 
             spawn.Send(command);
 
-            backend.Verify(p => p.write(command));
+            backend.Verify(p => p.Write(command));
         }
 
         [TestMethod]
         public void BasicExpectTest()
         {
             var backend = new Mock<IBackend>();
-            backend.Setup(p => p.readAsync()).Returns(ReturnStringAfterDelay("test expected string test", 10));
+            backend.Setup(p => p.ReadAsync()).Returns(ReturnStringAfterDelay("test expected string test", 10));
             var bf = new Mock<IBackendFactory>();
-            bf.Setup<IBackend>(foo => foo.createBackend()).Returns(backend.Object);
+            bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
             Spawn spawn = new Spawn(bf.Object);
             bool funcCalled = false;
 
@@ -43,9 +43,9 @@ namespace Expect.Test
         public void BasicExpectWithOutputTest()
         {
             var backend = new Mock<IBackend>();
-            backend.Setup(p => p.readAsync()).Returns(ReturnStringAfterDelay("test expected string test", 10));
+            backend.Setup(p => p.ReadAsync()).Returns(ReturnStringAfterDelay("test expected string test", 10));
             var bf = new Mock<IBackendFactory>();
-            bf.Setup<IBackend>(foo => foo.createBackend()).Returns(backend.Object);
+            bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
             Spawn spawn = new Spawn(bf.Object);
             bool funcCalled = false;
 
@@ -63,9 +63,9 @@ namespace Expect.Test
             int i = 0;
             Task<string>[] tasks = {ReturnStringAfterDelay("test expected ", 100), 
                                      ReturnStringAfterDelay("string test", 150)};
-            backend.Setup(p => p.readAsync()).Returns(() => tasks[i]).Callback(() => i++);
+            backend.Setup(p => p.ReadAsync()).Returns(() => tasks[i]).Callback(() => i++);
             var bf = new Mock<IBackendFactory>();
-            bf.Setup<IBackend>(foo => foo.createBackend()).Returns(backend.Object);
+            bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
             Spawn spawn = new Spawn(bf.Object);
             bool funcCalled = false;
             
@@ -82,9 +82,9 @@ namespace Expect.Test
             int i = 0;
             Task<string>[] tasks = {ReturnStringAfterDelay("test expected ", 100), 
                                      ReturnStringAfterDelay("string test", 150)};
-            backend.Setup(p => p.readAsync()).Returns(() => tasks[i]).Callback(() => i++);
+            backend.Setup(p => p.ReadAsync()).Returns(() => tasks[i]).Callback(() => i++);
             var bf = new Mock<IBackendFactory>();
-            bf.Setup<IBackend>(foo => foo.createBackend()).Returns(backend.Object);
+            bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
             Spawn spawn = new Spawn(bf.Object);
             bool funcCalled = false;
             string output = "";
@@ -104,9 +104,9 @@ namespace Expect.Test
             Task<string>[] tasks = {ReturnStringAfterDelay("test expected ", 100), 
                                      ReturnStringAfterDelay("string test", 150),
                                    ReturnStringAfterDelay("next expected string", 100)};
-            backend.Setup(p => p.readAsync()).Returns(() => tasks[i]).Callback(() => i++);
+            backend.Setup(p => p.ReadAsync()).Returns(() => tasks[i]).Callback(() => i++);
             var bf = new Mock<IBackendFactory>();
-            bf.Setup<IBackend>(foo => foo.createBackend()).Returns(backend.Object);
+            bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
             Spawn spawn = new Spawn(bf.Object);
             string output = "";
 
@@ -125,9 +125,9 @@ namespace Expect.Test
         public void TimeoutThrownExpectTest()
         {
             var backend = new Mock<IBackend>();
-            backend.Setup(p => p.readAsync()).Returns(ReturnStringAfterDelay("test expected string test", 1200));
+            backend.Setup(p => p.ReadAsync()).Returns(ReturnStringAfterDelay("test expected string test", 1200));
             var bf = new Mock<IBackendFactory>();
-            bf.Setup<IBackend>(foo => foo.createBackend()).Returns(backend.Object);
+            bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
             Spawn spawn = new Spawn(bf.Object);
             spawn.setTimeout(500);
             Exception exc = null;
@@ -151,9 +151,9 @@ namespace Expect.Test
         public void TimeoutNotThrownExpectTest()
         {
             var backend = new Mock<IBackend>();
-            backend.Setup(p => p.readAsync()).Returns(ReturnStringAfterDelay("test expected string test", 1200));
+            backend.Setup(p => p.ReadAsync()).Returns(ReturnStringAfterDelay("test expected string test", 1200));
             var bf = new Mock<IBackendFactory>();
-            bf.Setup<IBackend>(foo => foo.createBackend()).Returns(backend.Object);
+            bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
             Spawn spawn = new Spawn(bf.Object);
             spawn.setTimeout(2400);
             Exception exc = null;
@@ -177,7 +177,7 @@ namespace Expect.Test
         {
             var backend = new Mock<IBackend>();
             var bf = new Mock<IBackendFactory>();
-            bf.Setup<IBackend>(foo => foo.createBackend()).Returns(backend.Object);
+            bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
             Spawn spawn = new Spawn(bf.Object);
             spawn.setTimeout(2400);
             Assert.AreEqual(2400, spawn.getTimeout());
@@ -188,7 +188,7 @@ namespace Expect.Test
         {
             var backend = new Mock<IBackend>();
             var bf = new Mock<IBackendFactory>();
-            bf.Setup<IBackend>(foo => foo.createBackend()).Returns(backend.Object);
+            bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
             Spawn spawn = new Spawn(bf.Object);
             spawn.setTimeout(200);
             Assert.AreEqual(200, spawn.getTimeout());
@@ -199,7 +199,7 @@ namespace Expect.Test
         {
             var backend = new Mock<IBackend>();
             var bf = new Mock<IBackendFactory>();
-            bf.Setup<IBackend>(foo => foo.createBackend()).Returns(backend.Object);
+            bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
             Spawn spawn = new Spawn(bf.Object);
             Exception exc = null;
             ArgumentOutOfRangeException aoorexc = null;
