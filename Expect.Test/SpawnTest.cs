@@ -218,7 +218,7 @@ namespace Expect.Test
 
             Assert.IsNull(exc);
             Assert.IsNotNull(aoorexc);
-            Assert.AreEqual("_timeout", aoorexc.ParamName);
+            Assert.AreEqual("timeout", aoorexc.ParamName);
         }
     }
 }
