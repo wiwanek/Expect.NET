@@ -23,9 +23,6 @@ task Init -depends Clean {
 
 task Compile -depends Init { 
   Framework '4.5'
-  msbuild /version
-  echo " $sln_file"
-  #msbuild $sln_file
   msbuild /p:OutDir=$buildartifacts_dir $sln_file
 } 
 
