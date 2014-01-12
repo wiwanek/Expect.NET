@@ -37,7 +37,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Expect.NET Wojtek.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nuget|AnyCPU'">
     <OutputPath>bin\Nuget\</OutputPath>
@@ -69,7 +70,6 @@
     <Compile Include="TimeoutException.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Expect.NET Wojtek.pfx" />
     <None Include="Expect.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
