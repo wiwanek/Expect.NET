@@ -17,39 +17,8 @@ task Clean {
 } 
 
 task Init -depends Clean { 
-<#    . .\psake_ext.ps1
-    Generate-Assembly-Info `
-        -file "$base_dir\Rhino.Mocks\Properties\AssemblyInfo.cs" `
-        -title "Rhino Mocks $version" `
-        -description "Mocking Framework for .NET" `
-        -company "Hibernating Rhinos" `
-        -product "Rhino Mocks $version" `
-        -version $version `
-        -copyright "Hibernating Rhinos & Ayende Rahien 2004 - 2009"
-        
-    Generate-Assembly-Info `
-        -file "$base_dir\Rhino.Mocks.Tests\Properties\AssemblyInfo.cs" `
-        -title "Rhino Mocks Tests $version" `
-        -description "Mocking Framework for .NET" `
-        -company "Hibernating Rhinos" `
-        -product "Rhino Mocks Tests $version" `
-        -version $version `
-        -clsCompliant "false" `
-        -copyright "Hibernating Rhinos & Ayende Rahien 2004 - 2009"
-        
-    Generate-Assembly-Info `
-        -file "$base_dir\Rhino.Mocks.Tests.Model\Properties\AssemblyInfo.cs" `
-        -title "Rhino Mocks Tests Model $version" `
-        -description "Mocking Framework for .NET" `
-        -company "Hibernating Rhinos" `
-        -product "Rhino Mocks Tests Model $version" `
-        -version $version `
-        -clsCompliant "false" `
-        -copyright "Hibernating Rhinos & Ayende Rahien 2004 - 2009"
-#>        
     new-item $release_dir -itemType directory 
     new-item $buildartifacts_dir -itemType directory 
-#    cp $tools_dir\MbUnit\*.* $build_dir
 } 
 
 task Compile -depends Init { 
