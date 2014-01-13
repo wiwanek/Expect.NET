@@ -6,11 +6,12 @@ properties {
   $sln_file = "$base_dir\Expect.NET.sln" 
   $major = 1
   $minor = 1
-  $build = 5
+  $build = 7
   $revision = 0
   $version = "$major.$minor.$build.$revision"
-  $tools_dir = "$base_dir\Tools"
+  $nuget = "$base_dir\.nuget\nuget.exe"
   $release_dir = "$base_dir\Release"
+  $spec_file = "Expect.nuspec"
 } 
 
 task default -depends Test
@@ -36,6 +37,11 @@ task Test -depends Compile {
   cd $build_dir
     exec { & MSTest /testcontainer:Expect.Test.dll } 
   cd $old        
+}
+
+task Release -depends Test,Compile {
+	copy-item $build_dir\Expect.NET.dll $release_dir
+	exec { & $nuget pack "$specFile" -Version "$version" -OutputDirectory "$release_dir" }
 }
 
 function StepVersion {

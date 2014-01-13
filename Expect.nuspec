@@ -14,6 +14,6 @@ Expect.NET allows to control of interactive shell applications from .NET code in
         <tags>expect</tags>
     </metadata>
     <files>
-        <file src="bin\Release\Expect.NET.dll" target="lib\net45" />
+        <file src="Release\Expect.NET.dll" target="lib\net45" />
     </files>
 </package>
