@@ -4,7 +4,11 @@ properties {
   $build_dir = "$base_dir\build" 
   $buildartifacts_dir = "$build_dir\\" 
   $sln_file = "$base_dir\Expect.NET.sln" 
-  $version = "1.2.0.0"
+  $major = 1
+  $minor = 1
+  $build = 5
+  $revision = 0
+  $version = "$major.$minor.$build.$revision"
   $tools_dir = "$base_dir\Tools"
   $release_dir = "$base_dir\Release"
 } 
@@ -24,6 +28,7 @@ task Init -depends Clean {
 task Compile -depends Init { 
   Framework '4.5'
   msbuild /p:OutDir=$buildartifacts_dir $sln_file
+  StepVersion
 } 
 
 task Test -depends Compile {
@@ -31,4 +36,47 @@ task Test -depends Compile {
   cd $build_dir
     exec { & MSTest /testcontainer:Expect.Test.dll } 
   cd $old        
+}
+
+function StepVersion {
+	$build++
+	$version = "$major.$minor.$build.$revision"
+	Update-AssemblyInfoFiles $version
+	Update-CurrentScriptFile $build
+}
+
+#-------------------------------------------------------------------------------
+# Update version numbers of AssemblyInfo.cs
+#-------------------------------------------------------------------------------
+function Update-AssemblyInfoFiles ([string] $version) {
+    $assemblyVersionPattern = 'AssemblyVersion\("[0-9]+(\.([0-9]+|\*)){1,3}"\)'
+    $fileVersionPattern = 'AssemblyFileVersion\("[0-9]+(\.([0-9]+|\*)){1,3}"\)'
+    $assemblyVersion = 'AssemblyVersion("' + $version + '")';
+    $fileVersion = 'AssemblyFileVersion("' + $version + '")';
+     
+    Get-ChildItem -r -filter AssemblyInfo.cs | ForEach-Object {
+        $filename = $_.Directory.ToString() + '\' + $_.Name
+        $filename + ' -> ' + $version
+         
+        (Get-Content $filename) | ForEach-Object {
+            % {$_ -replace $assemblyVersionPattern, $assemblyVersion } |
+            % {$_ -replace $fileVersionPattern, $fileVersion }
+        } | Set-Content $filename
+    }
+}
+
+#-------------------------------------------------------------------------------
+# Update version numbers of current script
+#-------------------------------------------------------------------------------
+function Update-CurrentScriptFile ([int] $build) {
+    $buildPattern = '\$build = [0-9]+'
+    $buildStr = '$build = ' + $build;
+
+    $filename = "build.ps1"
+    	
+	$filename + ' -> ' + $build
+    
+	(Get-Content $filename) | ForEach-Object {
+        % {$_ -replace $buildPattern, $buildStr } 
+    } | Set-Content $filename
 }
