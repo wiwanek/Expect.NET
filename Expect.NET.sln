@@ -24,6 +24,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EF069DF3-FA34-4985-B1AE-005AD7A30F72}"
 	ProjectSection(SolutionItems) = preProject
 		build.ps1 = build.ps1
+		Expect.nuspec = Expect.nuspec
 	EndProjectSection
 EndProject
 Global
