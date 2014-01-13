@@ -4,7 +4,7 @@ properties {
   $build_dir = "$base_dir\build" 
   $buildartifacts_dir = "$build_dir\\" 
   $sln_file = "$base_dir\Expect.NET.sln" 
-  $version = "1.0.2"
+  $version = "1.2.0.0"
   $tools_dir = "$base_dir\Tools"
   $release_dir = "$base_dir\Release"
 } 
@@ -27,7 +27,6 @@ task Compile -depends Init {
 } 
 
 task Test -depends Compile {
-  Framework '4.5'
   $old = pwd
   cd $build_dir
     exec { & MSTest /testcontainer:Expect.Test.dll } 
