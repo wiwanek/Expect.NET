@@ -6,7 +6,7 @@ properties {
   $sln_file = "$base_dir\Expect.NET.sln" 
   $major = 1
   $minor = 1
-  $build = 7
+  $build = 9
   $revision = 0
   $version = "$major.$minor.$build.$revision"
   $nuget = "$base_dir\.nuget\nuget.exe"
