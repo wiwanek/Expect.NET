@@ -2,11 +2,11 @@ properties {
   $base_dir  = resolve-path .
   $lib_dir = "$base_dir\SharedLibs"
   $build_dir = "$base_dir\build" 
-  $buildartifacts_dir = "$build_dir\\" 
+  $buildartifacts_dir = "$build_dir\" 
   $sln_file = "$base_dir\Expect.NET.sln" 
   $major = 1
   $minor = 1
-  $build = 9
+  $build = 24
   $revision = 0
   $version = "$major.$minor.$build.$revision"
   $nuget = "$base_dir\.nuget\nuget.exe"
@@ -28,18 +28,21 @@ task Init -depends Clean {
 
 task Compile -depends Init { 
   Framework '4.5'
-  msbuild /p:OutDir=$buildartifacts_dir $sln_file
+  msbuild /p:OutDir=$buildartifacts_dir /p:BuildProjectReferences=false $base_dir\Expect.NET\Expect.csproj
+  msbuild /p:OutDir=$buildartifacts_dir /p:BuildProjectReferences=false $base_dir\Expect.Test\Expect.Test.csproj 
+  msbuild /p:OutDir=$buildartifacts_dir /p:BuildProjectReferences=false $base_dir\ExampleApp\ExampleApp.csproj
+  msbuild /p:OutDir=$buildartifacts_dir /p:BuildProjectReferences=false $base_dir\ExampleAppNuget\ExampleAppNuget.csproj
   StepVersion
 } 
 
 task Test -depends Compile {
-  $old = pwd
-  cd $build_dir
-    exec { & MSTest /testcontainer:Expect.Test.dll } 
-  cd $old        
+ # $old = pwd
+ # cd $build_dir
+    exec { & MSTest /testcontainer:$buildartifacts_dir\Expect.Test.dll } 
+  #cd $old        
 }
 
-task Release -depends Test,Compile {
+task Release -depends Test {
 	copy-item $build_dir\Expect.NET.dll $release_dir
 	exec { & $nuget pack "$specFile" -Version "$version" -OutputDirectory "$release_dir" }
 }

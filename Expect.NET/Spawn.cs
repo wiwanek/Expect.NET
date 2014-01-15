@@ -12,14 +12,53 @@ namespace Expect
             _backend = backendFactory.CreateBackend();
         }
 
+        /// <summary>
+        /// Executes code when expected string is found by Expect function
+        /// </summary>
         public delegate void ExpectedHandler();
+
+        /// <summary>
+        /// Executes code when expected string is found by Expect function.
+        /// Receives session output to handle.
+        /// </summary>
+        /// <param name="output">session output with expected pattern</param>
         public delegate void ExpectedHandlerWithOutput(string output);
+
+        /// <summary>
+        /// Sends characters to the session.
+        /// </summary>
+        /// <remarks>
+        /// To send enter you have to add '\n' at the end.
+        /// </remarks>
+        /// <example>
+        /// Send("cmd.exe\n");
+        /// </example>
+        /// <param name="command">String to be sent to session</param>
         public void Send(string command) { _backend.Write(command); }
+
+        /// <summary>
+        /// Waits until query is printed on session output and 
+        /// executes handler
+        /// </summary>
+        /// <param name="query">expected output</param>
+        /// <param name="handler">action to be performed</param>
+        /// <exception cref="System.TimeoutException">Thrown when query is not find for given
+        /// amount of time</exception>
         public void Expect(string query, ExpectedHandler handler)
         {
             Expect(query, (s) => handler());
         }
-        public void Expect(string query, ExpectedHandlerWithOutput handler) 
+
+        /// <summary>
+        /// Waits until query is printed on session output and 
+        /// executes handler. The output including expected query is
+        /// passed to handler.
+        /// </summary>
+        /// <param name="query">expected output</param>
+        /// <param name="handler">action to be performed, it accepts session output as ana argument</param>
+        /// <exception cref="System.TimeoutException">Thrown when query is not find for given
+        /// amount of time</exception>
+        public void Expect(string query, ExpectedHandlerWithOutput handler)
         {
             Task timeoutTask = null;
             if (_timeout > 0)
@@ -62,6 +101,10 @@ namespace Expect
             return GetTimeout();
         }
 
+        /// <summary>
+        /// Returns configured timeout value for Expect function
+        /// </summary>
+        /// <returns>timeout value in miliseconds for Expect function</returns>
         public int GetTimeout()
         {
             return _timeout;
@@ -73,6 +116,10 @@ namespace Expect
             SetTimeout(timeout);
         }
 
+        /// <summary>
+        /// Sets timeout value for Expect function
+        /// </summary>
+        /// <param name="timeout">timeout value in miliseconds for Expect function</param>
         public void SetTimeout(int timeout)
         {
             if (timeout <= 0)
