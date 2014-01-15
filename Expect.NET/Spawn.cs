@@ -56,12 +56,24 @@ namespace Expect
             }
         }
 
+        [Obsolete("Use GetTimeout()")]
         public int getTimeout()
+        {
+            return GetTimeout();
+        }
+
+        public int GetTimeout()
         {
             return _timeout;
         }
 
+        [Obsolete("Use SetTimeout()")]
         public void setTimeout(int timeout)
+        {
+            SetTimeout(timeout);
+        }
+
+        public void SetTimeout(int timeout)
         {
             if (timeout <= 0)
             {

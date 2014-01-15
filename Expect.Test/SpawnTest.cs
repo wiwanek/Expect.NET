@@ -129,7 +129,7 @@ namespace Expect.Test
             var bf = new Mock<IBackendFactory>();
             bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
             Spawn spawn = new Spawn(bf.Object);
-            spawn.setTimeout(500);
+            spawn.SetTimeout(500);
             Exception exc = null;
             bool funcCalled = false;
 
@@ -155,7 +155,7 @@ namespace Expect.Test
             var bf = new Mock<IBackendFactory>();
             bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
             Spawn spawn = new Spawn(bf.Object);
-            spawn.setTimeout(2400);
+            spawn.SetTimeout(2400);
             Exception exc = null;
             bool funcCalled = false;
 
@@ -179,8 +179,8 @@ namespace Expect.Test
             var bf = new Mock<IBackendFactory>();
             bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
             Spawn spawn = new Spawn(bf.Object);
-            spawn.setTimeout(2400);
-            Assert.AreEqual(2400, spawn.getTimeout());
+            spawn.SetTimeout(2400);
+            Assert.AreEqual(2400, spawn.GetTimeout());
         }
 
         [TestMethod]
@@ -190,8 +190,8 @@ namespace Expect.Test
             var bf = new Mock<IBackendFactory>();
             bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
             Spawn spawn = new Spawn(bf.Object);
-            spawn.setTimeout(200);
-            Assert.AreEqual(200, spawn.getTimeout());
+            spawn.SetTimeout(200);
+            Assert.AreEqual(200, spawn.GetTimeout());
         }
 
         [TestMethod]
@@ -205,7 +205,7 @@ namespace Expect.Test
             ArgumentOutOfRangeException aoorexc = null;
             try
             {
-                spawn.setTimeout(-1);
+                spawn.SetTimeout(-1);
             }
             catch (ArgumentOutOfRangeException aoore)
             {
