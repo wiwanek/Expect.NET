@@ -47,7 +47,7 @@
     <Reference Include="Expect.NET, Version=1.0.1.42780, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Expect.NET.1.0.1\lib\net45\Expect.NET.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -6,7 +6,7 @@ properties {
   $sln_file = "$base_dir\Expect.NET.sln" 
   $major = 1
   $minor = 1
-  $build = 28
+  $build = 32
   $revision = 0
   $version = "$major.$minor.$build.$revision"
   $nuget = "$base_dir\.nuget\nuget.exe"
@@ -29,9 +29,9 @@ task Init -depends Clean {
 task Compile -depends Init { 
   Framework '4.5'
   msbuild /p:OutDir=$buildartifacts_dir /p:BuildProjectReferences=false $base_dir\Expect.NET\Expect.csproj
-  msbuild /p:OutDir=$buildartifacts_dir $base_dir\Expect.Test\Expect.Test.csproj 
+  msbuild /p:OutDir=$buildartifacts_dir /p:BuildProjectReferences=false $base_dir\Expect.Test\Expect.Test.csproj 
   msbuild /p:OutDir=$buildartifacts_dir /p:BuildProjectReferences=false $base_dir\ExampleApp\ExampleApp.csproj
-  msbuild /p:OutDir=$buildartifacts_dir /p:BuildProjectReferences=false $base_dir\ExampleAppNuget\ExampleAppNuget.csproj
+  msbuild /p:BuildProjectReferences=false $base_dir\ExampleAppNuget\ExampleAppNuget.csproj
   StepVersion
 } 
 
