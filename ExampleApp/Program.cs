@@ -31,17 +31,17 @@ namespace ExampleApp
                 {
                     spawn.Expect("Ping statistics", s => Console.WriteLine(s));
                 }
-                catch (Expect.TimeoutException)
+                catch (TimeoutException)
                 {
                     Console.WriteLine("Timeout 8.8.8.8!");
                 }
-                spawn.setTimeout(5000);
+                spawn.SetTimeout(5000);
                 spawn.Expect(@">", () => spawn.Send("ping 8.8.4.4\n"));
                 try
                 {
                     spawn.Expect("Ping statistics", s => Console.WriteLine(s));
                 }
-                catch (Expect.TimeoutException)
+                catch (TimeoutException)
                 {
                     Console.WriteLine("Timeout 8.8.4.4!");
                 }
