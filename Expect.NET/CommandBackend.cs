@@ -46,8 +46,8 @@ namespace Expect
             tasks.Add(_errorRead);
             tasks.Add(_stdRead);
 
-            var ret = await Task<string>.WhenAny<string>(tasks);
-            return await ret;
+            var ret = await Task<string>.WhenAny<string>(tasks).ConfigureAwait(false);
+            return await ret.ConfigureAwait(false);
         }
 
         private void RecreateErrorReadTask()
@@ -70,7 +70,7 @@ namespace Expect
 
         private async Task<string> CreateStringAsync(char[] c, Task<int> n)
         {
-            return new string(c, 0, await n); 
+            return new string(c, 0, await n.ConfigureAwait(false)); 
         }
     }
 }

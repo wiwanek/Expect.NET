@@ -220,5 +220,21 @@ namespace Expect.Test
             Assert.IsNotNull(aoorexc);
             Assert.AreEqual("timeout", aoorexc.ParamName);
         }
+
+        [TestMethod]
+        public void BasicAsyncExpectTest()
+        {
+            var backend = new Mock<IBackend>();
+            backend.Setup(p => p.ReadAsync()).Returns(ReturnStringAfterDelay("test expected string test", 10));
+            var bf = new Mock<IBackendFactory>();
+            bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
+            Spawn spawn = new Spawn(bf.Object);
+            bool funcCalled = false;
+
+            Task task = spawn.ExpectAsync("expected string", () => funcCalled = true);
+            task.Wait();
+            
+            Assert.IsTrue(funcCalled);
+        }
     }
 }

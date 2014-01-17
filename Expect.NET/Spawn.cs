@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -39,6 +40,10 @@ namespace Expect
         /// <summary>
         /// Waits until query is printed on session output and 
         /// executes handler
+        /// <para>
+        /// This is wrapped async function. All await calls use ConfigureAwait(false), that should prevent 
+        /// from deadlock. Anyway, be aware when using it.
+        /// </para>
         /// </summary>
         /// <param name="query">expected output</param>
         /// <param name="handler">action to be performed</param>
@@ -46,13 +51,25 @@ namespace Expect
         /// amount of time</exception>
         public void Expect(string query, ExpectedHandler handler)
         {
-            Expect(query, (s) => handler());
+            try
+            {
+                ExpectAsync(query, (s) => handler()).Wait();
+            }
+            catch (AggregateException e)
+            {
+                ExceptionDispatchInfo.Capture(e.InnerException).Throw();
+                throw;
+            }
         }
 
         /// <summary>
         /// Waits until query is printed on session output and 
         /// executes handler. The output including expected query is
         /// passed to handler.
+        /// <para>
+        /// This is wrapped async function. All await calls use ConfigureAwait(false), that should prevent 
+        /// from deadlock. Anyway, be aware when using it.
+        /// </para>
         /// </summary>
         /// <param name="query">expected output</param>
         /// <param name="handler">action to be performed, it accepts session output as ana argument</param>
@@ -60,38 +77,14 @@ namespace Expect
         /// amount of time</exception>
         public void Expect(string query, ExpectedHandlerWithOutput handler)
         {
-            Task timeoutTask = null;
-            if (_timeout > 0)
+            try
             {
-                timeoutTask = Task.Delay(_timeout);
+                ExpectAsync(query, (s) => handler(s)).Wait();
             }
-            _output = "";
-            bool expectedQueryFound = false;
-            while (!expectedQueryFound)
+            catch (AggregateException e)
             {
-                Task<string> task = _backend.ReadAsync();
-                IList<Task> tasks = new List<Task>();
-                tasks.Add(task);
-                if (timeoutTask != null)
-                {
-                    tasks.Add(timeoutTask);
-                }
-                Task<Task> any = Task.WhenAny(tasks);
-                any.Wait();
-                if (task == any.Result)
-                {
-                    task.Wait();
-                    _output += task.Result;
-                    expectedQueryFound = Regex.Match(_output, query).Success;
-                    if (expectedQueryFound)
-                    {
-                        handler(_output);
-                    }
-                }
-                else
-                {
-                    throw new TimeoutException();
-                }
+                ExceptionDispatchInfo.Capture(e.InnerException).Throw();
+                throw;
             }
         }
 
@@ -133,5 +126,62 @@ namespace Expect
         private string _output;
         private int _timeout = 2500;
 
+
+        /// <summary>
+        /// Waits until query is printed on session output and 
+        /// executes handler
+        /// </summary>
+        /// <param name="query">expected output</param>
+        /// <param name="handler">action to be performed</param>
+        /// <exception cref="System.TimeoutException">Thrown when query is not find for given
+        /// amount of time</exception>
+        public async Task ExpectAsync(string query, ExpectedHandler handler)
+        {
+            await ExpectAsync(query, s => handler()).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Waits until query is printed on session output and 
+        /// executes handler. The output including expected query is
+        /// passed to handler.
+        /// </summary>
+        /// <param name="query">expected output</param>
+        /// <param name="handler">action to be performed, it accepts session output as ana argument</param>
+        /// <exception cref="System.TimeoutException">Thrown when query is not find for given
+        /// amount of time</exception>
+        public async Task ExpectAsync(string query, ExpectedHandlerWithOutput handler)
+        {
+            Task timeoutTask = null;
+            if (_timeout > 0)
+            {
+                timeoutTask = Task.Delay(_timeout);
+            }
+            _output = "";
+            bool expectedQueryFound = false;
+            while (!expectedQueryFound)
+            {
+                Task<string> task = _backend.ReadAsync();
+                IList<Task> tasks = new List<Task>();
+                tasks.Add(task);
+                if (timeoutTask != null)
+                {
+                    tasks.Add(timeoutTask);
+                }
+                Task any = await Task.WhenAny(tasks).ConfigureAwait(false);
+                if (task == any)
+                {
+                    _output += await task.ConfigureAwait(false);
+                    expectedQueryFound = Regex.Match(_output, query).Success;
+                    if (expectedQueryFound)
+                    {
+                        handler(_output);
+                    }
+                }
+                else
+                {
+                    throw new TimeoutException();
+                }
+            }
+        }
     }
 }
