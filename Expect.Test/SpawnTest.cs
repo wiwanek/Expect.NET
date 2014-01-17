@@ -173,6 +173,57 @@ namespace Expect.Test
         }
 
         [TestMethod]
+        public async Task TimeoutThrownExpectAsyncTest()
+        {
+            var backend = new Mock<IBackend>();
+            backend.Setup(p => p.ReadAsync()).Returns(ReturnStringAfterDelay("test expected string test", 1200));
+            var bf = new Mock<IBackendFactory>();
+            bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
+            Spawn spawn = new Spawn(bf.Object);
+            spawn.SetTimeout(500);
+            Exception exc = null;
+            bool funcCalled = false;
+
+            try
+            {
+                await spawn.ExpectAsync("expected string", () => funcCalled = true);
+            }
+            catch (Exception e)
+            {
+                exc = e;
+            }
+
+            Assert.IsNotNull(exc);
+            Assert.IsInstanceOfType(exc, typeof(TimeoutException));
+            Assert.IsFalse(funcCalled);
+        }
+
+        [TestMethod]
+        public async Task TimeoutNotThrownExpectAsyncTest()
+        {
+            var backend = new Mock<IBackend>();
+            backend.Setup(p => p.ReadAsync()).Returns(ReturnStringAfterDelay("test expected string test", 1200));
+            var bf = new Mock<IBackendFactory>();
+            bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
+            Spawn spawn = new Spawn(bf.Object);
+            spawn.SetTimeout(2400);
+            Exception exc = null;
+            bool funcCalled = false;
+
+            try
+            {
+                await spawn.ExpectAsync("expected string", () => funcCalled = true);
+            }
+            catch (Exception e)
+            {
+                exc = e;
+            }
+
+            Assert.IsNull(exc);
+            Assert.IsTrue(funcCalled);
+        }
+
+        [TestMethod]
         public void SetGetTimeout2400Test()
         {
             var backend = new Mock<IBackend>();
@@ -235,6 +286,81 @@ namespace Expect.Test
             task.Wait();
             
             Assert.IsTrue(funcCalled);
+        }
+        [TestMethod]
+        public void BasicExpectAsyncWithOutputTest()
+        {
+            var backend = new Mock<IBackend>();
+            backend.Setup(p => p.ReadAsync()).Returns(ReturnStringAfterDelay("test expected string test", 10));
+            var bf = new Mock<IBackendFactory>();
+            bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
+            Spawn spawn = new Spawn(bf.Object);
+            bool funcCalled = false;
+
+            string output = "";
+            spawn.ExpectAsync("expected string", (s) => { funcCalled = true; output = s; }).Wait();
+
+            Assert.IsTrue(funcCalled);
+            Assert.AreEqual("test expected string test", output);
+        }
+
+        [TestMethod]
+        public void SplitResultExpectAsyncTest()
+        {
+            var backend = new Mock<IBackend>();
+            int i = 0;
+            Task<string>[] tasks = {ReturnStringAfterDelay("test expected ", 100), 
+                                     ReturnStringAfterDelay("string test", 150)};
+            backend.Setup(p => p.ReadAsync()).Returns(() => tasks[i]).Callback(() => i++);
+            var bf = new Mock<IBackendFactory>();
+            bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
+            Spawn spawn = new Spawn(bf.Object);
+            bool funcCalled = false;
+
+            spawn.ExpectAsync("expected string", () => funcCalled = true).Wait();
+
+            Assert.IsTrue(funcCalled);
+            Assert.AreEqual(2, i);
+        }
+
+        [TestMethod]
+        public void SplitResultExpectAsyncWitOutputTest()
+        {
+            var backend = new Mock<IBackend>();
+            int i = 0;
+            Task<string>[] tasks = {ReturnStringAfterDelay("test expected ", 100), 
+                                     ReturnStringAfterDelay("string test", 150)};
+            backend.Setup(p => p.ReadAsync()).Returns(() => tasks[i]).Callback(() => i++);
+            var bf = new Mock<IBackendFactory>();
+            bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
+            Spawn spawn = new Spawn(bf.Object);
+            bool funcCalled = false;
+            string output = "";
+
+            spawn.ExpectAsync("expected string", (s) => { funcCalled = true; output = s; }).Wait();
+
+            Assert.IsTrue(funcCalled);
+            Assert.AreEqual(2, i);
+            Assert.AreEqual("test expected string test", output);
+        }
+
+        [TestMethod]
+        public void SendResetOutputAsyncTest()
+        {
+            var backend = new Mock<IBackend>();
+            int i = 0;
+            Task<string>[] tasks = {ReturnStringAfterDelay("test expected ", 100), 
+                                     ReturnStringAfterDelay("string test", 150),
+                                   ReturnStringAfterDelay("next expected string", 100)};
+            backend.Setup(p => p.ReadAsync()).Returns(() => tasks[i]).Callback(() => i++);
+            var bf = new Mock<IBackendFactory>();
+            bf.Setup<IBackend>(foo => foo.CreateBackend()).Returns(backend.Object);
+            Spawn spawn = new Spawn(bf.Object);
+            string output = "";
+
+            spawn.ExpectAsync("expected string", (s) => { spawn.Send("test"); }).Wait();
+            spawn.ExpectAsync("next expected", (s) => { output = s; }).Wait();
+            Assert.AreEqual("next expected string", output);
         }
     }
 }
