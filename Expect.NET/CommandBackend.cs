@@ -72,5 +72,13 @@ namespace Expect
         {
             return new string(c, 0, await n.ConfigureAwait(false)); 
         }
+
+
+        public string Read()
+        {
+            char[] tmp = new char[256];
+            int n = _process.StandardOutput.Read(tmp, 0, 256);
+            return new string(tmp, 0, n);
+        }
     }
 }

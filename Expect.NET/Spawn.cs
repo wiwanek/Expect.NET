@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.ExceptionServices;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Expect
@@ -40,10 +42,6 @@ namespace Expect
         /// <summary>
         /// Waits until query is printed on session output and 
         /// executes handler
-        /// <para>
-        /// This is wrapped async function. All await calls use ConfigureAwait(false), that should prevent 
-        /// from deadlock. Anyway, be aware when using it.
-        /// </para>
         /// </summary>
         /// <param name="query">expected output</param>
         /// <param name="handler">action to be performed</param>
@@ -51,25 +49,13 @@ namespace Expect
         /// amount of time</exception>
         public void Expect(string query, ExpectedHandler handler)
         {
-            try
-            {
-                ExpectAsync(query, (s) => handler()).Wait();
-            }
-            catch (AggregateException e)
-            {
-                ExceptionDispatchInfo.Capture(e.InnerException).Throw();
-                throw;
-            }
+            Expect(query, (s) => handler());
         }
 
         /// <summary>
         /// Waits until query is printed on session output and 
         /// executes handler. The output including expected query is
         /// passed to handler.
-        /// <para>
-        /// This is wrapped async function. All await calls use ConfigureAwait(false), that should prevent 
-        /// from deadlock. Anyway, be aware when using it.
-        /// </para>
         /// </summary>
         /// <param name="query">expected output</param>
         /// <param name="handler">action to be performed, it accepts session output as ana argument</param>
@@ -77,15 +63,27 @@ namespace Expect
         /// amount of time</exception>
         public void Expect(string query, ExpectedHandlerWithOutput handler)
         {
-            try
+            var tokenSource = new CancellationTokenSource();
+            CancellationToken ct = tokenSource.Token;
+            _output = "";
+            bool expectedQueryFound = false;
+            Task task = Task.Factory.StartNew(() =>
             {
-                ExpectAsync(query, (s) => handler(s)).Wait();
-            }
-            catch (AggregateException e)
+                while (!ct.IsCancellationRequested && !expectedQueryFound)
+                {
+                    _output += _backend.Read();
+                    expectedQueryFound = Regex.Match(_output, query).Success;
+                }
+            }, ct);
+            if (task.Wait(_timeout, ct))
             {
-                ExceptionDispatchInfo.Capture(e.InnerException).Throw();
-                throw;
+                handler(_output);
             }
+            else {
+                tokenSource.Cancel();
+                throw new TimeoutException();
+            }
+
         }
 
         [Obsolete("Use GetTimeout()")]

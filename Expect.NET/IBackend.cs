@@ -6,6 +6,7 @@ namespace Expect
     {
         void Write(string command);
         Task<string> ReadAsync();
+        string Read();
 
     }
 }
