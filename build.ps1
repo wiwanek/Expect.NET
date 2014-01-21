@@ -5,8 +5,8 @@ properties {
   $buildartifacts_dir = "$build_dir\" 
   $sln_file = "$base_dir\Expect.NET.sln" 
   $major = 1
-  $minor = 1
-  $build = 39
+  $minor = 2
+  $build = 0
   $revision = 0
   $version = "$major.$minor.$build.$revision"
   $nuget = "$base_dir\.nuget\nuget.exe"
