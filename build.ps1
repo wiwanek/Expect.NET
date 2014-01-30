@@ -6,9 +6,19 @@ properties {
   $sln_file = "$base_dir\Expect.NET.sln" 
   $major = 1
   $minor = 2
+  $patch = 0
   $build = 0
-  $revision = 0
-  $version = "$major.$minor.$build.$revision"
+  $label = ""
+  $version_assembly = "$major.$minor.$patch.$build"
+  $version_nuget = "$major.$minor.$patch"
+  if ( $label -ne "" ) {
+	$pattern = "^[a-zA-Z0-9.]+$"
+	if ($label -match $pattern) {
+		$version_nuget = "$version_nuget-$label"
+	} else {
+		throw "Label must comprise only ASCII alphanumerics and dot [a-zA-Z0-9.]"
+	}
+  }
   $nuget = "$base_dir\.nuget\nuget.exe"
   $release_dir = "$base_dir\Release"
   $spec_file = "Expect.nuspec"
@@ -24,6 +34,7 @@ task Clean {
 task Init -depends Clean { 
     new-item $release_dir -itemType directory 
     new-item $buildartifacts_dir -itemType directory 
+	UpdateVersion
 } 
 
 task Compile -depends Init { 
@@ -32,7 +43,6 @@ task Compile -depends Init {
   msbuild /p:OutDir=$buildartifacts_dir /p:BuildProjectReferences=false $base_dir\Expect.Test\Expect.Test.csproj 
   msbuild /p:OutDir=$buildartifacts_dir /p:BuildProjectReferences=false $base_dir\ExampleApp\ExampleApp.csproj
   msbuild /p:BuildProjectReferences=false $base_dir\ExampleAppNuget\ExampleAppNuget.csproj
-  StepVersion
 } 
 
 task Test -depends Compile {
@@ -44,14 +54,11 @@ task Test -depends Compile {
 
 task Release -depends Test {
 	copy-item $build_dir\Expect.NET.dll $release_dir
-	exec { & $nuget pack "$specFile" -Version "$version" -OutputDirectory "$release_dir" }
+	exec { & $nuget pack "$specFile" -Version "$version_nuget" -OutputDirectory "$release_dir" }
 }
 
-function StepVersion {
-	$build++
-	$version = "$major.$minor.$build.$revision"
-	Update-AssemblyInfoFiles $version
-	Update-CurrentScriptFile $build
+function UpdateVersion {
+	Update-AssemblyInfoFiles $version_assembly
 }
 
 #-------------------------------------------------------------------------------
@@ -74,18 +81,3 @@ function Update-AssemblyInfoFiles ([string] $version) {
     }
 }
 
-#-------------------------------------------------------------------------------
-# Update version numbers of current script
-#-------------------------------------------------------------------------------
-function Update-CurrentScriptFile ([int] $build) {
-    $buildPattern = '\$build = [0-9]+'
-    $buildStr = '$build = ' + $build;
-
-    $filename = "build.ps1"
-    	
-	$filename + ' -> ' + $build
-    
-	(Get-Content $filename) | ForEach-Object {
-        % {$_ -replace $buildPattern, $buildStr } 
-    } | Set-Content $filename
-}
