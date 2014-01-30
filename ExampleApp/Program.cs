@@ -31,7 +31,7 @@ namespace ExampleApp
                 {
                     spawn.Expect("Ping statistics", s => Console.WriteLine(s));
                 }
-                catch (TimeoutException)
+                catch (System.TimeoutException)
                 {
                     Console.WriteLine("Timeout 8.8.8.8!");
                 }
@@ -41,7 +41,7 @@ namespace ExampleApp
                 {
                     spawn.Expect("Ping statistics", s => Console.WriteLine(s));
                 }
-                catch (TimeoutException)
+                catch (System.TimeoutException)
                 {
                     Console.WriteLine("Timeout 8.8.4.4!");
                 }
