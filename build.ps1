@@ -42,7 +42,6 @@ task Compile -depends Init {
   msbuild /p:OutDir=$buildartifacts_dir /p:BuildProjectReferences=false $base_dir\Expect.NET\Expect.csproj
   msbuild /p:OutDir=$buildartifacts_dir /p:BuildProjectReferences=false $base_dir\Expect.Test\Expect.Test.csproj 
   msbuild /p:OutDir=$buildartifacts_dir /p:BuildProjectReferences=false $base_dir\ExampleApp\ExampleApp.csproj
-  msbuild /p:BuildProjectReferences=false $base_dir\ExampleAppNuget\ExampleAppNuget.csproj
 } 
 
 task Test -depends Compile {
