@@ -40,33 +40,6 @@ namespace Expect
         public void Send(string command) { _backend.Write(command); }
 
         /// <summary>
-        /// Sends characters to the session.
-        /// </summary>
-        /// <remarks>
-        /// To send enter you have to add '\n' at the end.
-        /// </remarks>
-        /// <example>
-        /// Send("cmd.exe\n");
-        /// </example>
-        /// <param name="command">String to be sent to session</param>
-        [Obsolete("Use Send()")]
-        public void send(string command) { Send(command); }
-
-        /// <summary>
-        /// Waits until query is printed on session output and 
-        /// executes handler
-        /// </summary>
-        /// <param name="query">expected output</param>
-        /// <param name="handler">action to be performed</param>
-        /// <exception cref="System.TimeoutException">Thrown when query is not find for given
-        /// amount of time</exception>
-        [Obsolete("Use Expect()")]
-        public void expect(string query, ExpectedHandler handler)
-        {
-            Expect(query, handler);
-        }
-        
-        /// <summary>
         /// Waits until query is printed on session output and 
         /// executes handler
         /// </summary>
@@ -77,21 +50,6 @@ namespace Expect
         public void Expect(string query, ExpectedHandler handler)
         {
             Expect(query, (s) => handler());
-        }
-
-        /// <summary>
-        /// Waits until query is printed on session output and 
-        /// executes handler. The output including expected query is
-        /// passed to handler.
-        /// </summary>
-        /// <param name="query">expected output</param>
-        /// <param name="handler">action to be performed, it accepts session output as ana argument</param>
-        /// <exception cref="System.TimeoutException">Thrown when query is not find for given
-        /// amount of time</exception>
-        [Obsolete("Use Expect()")]
-        public void expect(string query, ExpectedHandlerWithOutput handler)
-        {
-            Expect(query, handler);
         }
             
         /// <summary>
@@ -128,12 +86,6 @@ namespace Expect
 
         }
 
-        [Obsolete("Use GetTimeout()")]
-        public int getTimeout()
-        {
-            return GetTimeout();
-        }
-
         /// <summary>
         /// Returns configured timeout value for Expect function
         /// </summary>
@@ -141,12 +93,6 @@ namespace Expect
         public int GetTimeout()
         {
             return _timeout;
-        }
-
-        [Obsolete("Use SetTimeout()")]
-        public void setTimeout(int timeout)
-        {
-            SetTimeout(timeout);
         }
 
         /// <summary>
