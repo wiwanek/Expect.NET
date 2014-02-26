@@ -61,8 +61,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandBackendFactory.cs" />
+    <Compile Include="Expect.cs" />
     <Compile Include="IBackendFactory.cs" />
-    <Compile Include="SpawnCommand.cs" />
+    <Compile Include="ISession.cs" />
+    <Compile Include="ISpawnable.cs" />
+    <Compile Include="Session.cs" />
+    <Compile Include="ProcessSpawnable.cs" />
     <Compile Include="CommandBackend.cs" />
     <Compile Include="IBackend.cs" />
     <Compile Include="Spawn.cs" />

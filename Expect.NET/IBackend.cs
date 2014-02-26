@@ -1,12 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿//using System.Threading.Tasks;
 
-namespace Expect
-{
-    internal interface IBackend
-    {
-        void Write(string command);
-        Task<string> ReadAsync();
-        string Read();
+//namespace Expect
+//{
+//    internal interface IBackend
+//    {
+//        void Write(string command);
+//        Task<string> ReadAsync();
+//        string Read();
 
-    }
-}
+//    }
+//}

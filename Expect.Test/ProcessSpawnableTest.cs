@@ -6,7 +6,7 @@ using System.IO;
 namespace Expect.Test
 {
     [TestClass]
-    public class CommandBackendTest
+    public class ProcessSpawnableTest
     {
         [TestMethod]
         public void CommandBackendNullTest()
@@ -17,7 +17,7 @@ namespace Expect.Test
 
             try
             {
-                CommandBackend backend = new CommandBackend(proc);
+                CommandSpawnable backend = new CommandSpawnable(proc);
             }
             catch (Exception e)
             {
@@ -39,7 +39,7 @@ namespace Expect.Test
 
             try
             {
-                CommandBackend backend = new CommandBackend(proc);
+                CommandSpawnable backend = new CommandSpawnable(proc);
             }
             catch (Exception e)
             {
@@ -60,7 +60,7 @@ namespace Expect.Test
             Exception caughtException = null;
             try
             {
-                CommandBackend backend = new CommandBackend(proc);
+                CommandSpawnable backend = new CommandSpawnable(proc);
             }
             catch (Exception e)
             {

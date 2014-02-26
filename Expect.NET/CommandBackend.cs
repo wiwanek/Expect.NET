@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Expect
 {
-    internal class CommandBackend : IBackend
+    internal class CommandSpawnable : ISpawnable
     {
         private Process _process;
         private Task<string> _errorRead = null;
         private Task<string> _stdRead = null;
                
             
-        internal CommandBackend(Process process)
+        internal CommandSpawnable(Process process)
         {
             if (process.StartInfo.FileName == null || process.StartInfo.FileName.Length == 0)
             {
@@ -24,6 +24,8 @@ namespace Expect
             _process = process;
             
        }
+
+        public void Init() { }
 
         public void Write(string command)
         {

@@ -65,9 +65,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="CommandBackendTest.cs" />
+    <Compile Include="ProcessSpawnableTest.cs" />
     <Compile Include="SpawnTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ExpectTest.cs" />
+    <Compile Include="SessionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Expect.NET\Expect.csproj">
