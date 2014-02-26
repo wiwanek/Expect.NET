@@ -67,7 +67,7 @@
     <Compile Include="ISpawnable.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="ProcessSpawnable.cs" />
-    <Compile Include="CommandBackend.cs" />
+    <Compile Include="CommandSpawnable.cs" />
     <Compile Include="IBackend.cs" />
     <Compile Include="Spawn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
