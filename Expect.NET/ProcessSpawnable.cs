@@ -18,6 +18,8 @@ namespace Expect
         private Task<string> _errorRead = null;
         private Task<string> _stdRead = null;
 
+        internal IProcess Process { get { return _process; } }
+
         /// <summary>
         /// Initializes new ProcessSpawnable instance to handle shell command process
         /// </summary>
@@ -47,6 +49,11 @@ namespace Expect
         public ProcessSpawnable(Process process)
         {
             _process = new ProcessAdapter(process);
+        }
+
+        internal ProcessSpawnable(IProcess process)
+        {
+            _process = process;
         }
 
         /// <summary>
