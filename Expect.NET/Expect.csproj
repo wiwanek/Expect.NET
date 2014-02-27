@@ -63,8 +63,10 @@
     <Compile Include="CommandBackendFactory.cs" />
     <Compile Include="Expect.cs" />
     <Compile Include="IBackendFactory.cs" />
+    <Compile Include="IProcess.cs" />
     <Compile Include="ISession.cs" />
     <Compile Include="ISpawnable.cs" />
+    <Compile Include="ProcessAdapter.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="ProcessSpawnable.cs" />
     <Compile Include="CommandSpawnable.cs" />

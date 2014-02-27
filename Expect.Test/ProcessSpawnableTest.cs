@@ -17,7 +17,7 @@ namespace Expect.Test
 
             try
             {
-                CommandSpawnable backend = new CommandSpawnable(proc);
+                ProcessSpawnable backend = new ProcessSpawnable(proc);
             }
             catch (Exception e)
             {
@@ -39,7 +39,7 @@ namespace Expect.Test
 
             try
             {
-                CommandSpawnable backend = new CommandSpawnable(proc);
+                ProcessSpawnable backend = new ProcessSpawnable(proc);
             }
             catch (Exception e)
             {
@@ -60,7 +60,7 @@ namespace Expect.Test
             Exception caughtException = null;
             try
             {
-                CommandSpawnable backend = new CommandSpawnable(proc);
+                ProcessSpawnable backend = new ProcessSpawnable(proc);
             }
             catch (Exception e)
             {
