@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Expect
 {
-    class Expect
+    public class Expect
     {
         public static ISession Spawn(ISpawnable spawnable) 
         {

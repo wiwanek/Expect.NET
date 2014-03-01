@@ -138,23 +138,24 @@ namespace Expect
         /// <returns>text read from streams</returns>
         public string Read()
         {
-            StreamReaderThread outputThread = new StreamReaderThread(_process.StandardOutput);
-            StreamReaderThread errorThread = new StreamReaderThread(_process.StandardError);
-            Thread t1 = new Thread(new ThreadStart(outputThread.Read));
-            Thread t2 = new Thread(new ThreadStart(errorThread.Read));
-            while (t1.IsAlive && t2.IsAlive)
-            {
-                Thread.Yield();
-            }
-            if (t1.IsAlive)
-            {
-                t1.Abort();
-            }
-            if (t2.IsAlive)
-            {
-                t2.Abort();
-            }
-            return errorThread.Output + outputThread.Output;
+            //StreamReaderThread outputThread = new StreamReaderThread(_process.StandardOutput);
+            //StreamReaderThread errorThread = new StreamReaderThread(_process.StandardError);
+            //Thread t1 = new Thread(new ThreadStart(outputThread.Read));
+            //Thread t2 = new Thread(new ThreadStart(errorThread.Read));
+            //t1.Start();
+            //t2.Start();
+            //while (t1.IsAlive && t2.IsAlive)
+            //{
+            //    Thread.Yield();
+            //}
+            //t1.Abort();
+            //t2.Abort();
+            //return errorThread.Output + outputThread.Output;
+            //Task<string> t = ReadAsync();
+            var t = Task.Run(async () => { return await ReadAsync().ConfigureAwait(false); });
+            //t.Wait();
+            return t.Result;
+
         }
 
         private class StreamReaderThread
@@ -173,12 +174,15 @@ namespace Expect
                 {
                     int maxSize = 4096;
                     char[] tmp = new char[maxSize];
-                    int n = stream.Read(tmp, 0, maxSize);
+                    Task<int> task = stream.ReadAsync(tmp, 0, maxSize);
+                    task.Wait();
+                    int n = task.Result;
                     Output = new string(tmp, 0, n);
                 }
                 catch (ThreadAbortException)
                 {
                     Output = "";
+                    Thread.ResetAbort();
                 }
             }
         } 
