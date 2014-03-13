@@ -1,4 +1,4 @@
-﻿using Expect;
+﻿using ExpectNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +15,7 @@ namespace ExampleApp
             try
             {
                 Console.WriteLine("ExampleApp");
-                ISession spawn = Expect.Expect.Spawn(new ProcessSpawnable("cmd.exe"));
+                ISession spawn = ExpectNet.Expect.Spawn(new ProcessSpawnable("cmd.exe"));
                 spawn.Expect(">", s => Console.WriteLine("got: " + s));
                 spawn.Send("dir c:\\\n");
                 spawn.Expect("Program", (s) => Console.WriteLine("found: " + s));

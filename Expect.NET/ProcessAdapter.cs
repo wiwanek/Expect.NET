@@ -1,5 +1,5 @@
 ﻿
-namespace Expect
+namespace ExpectNet
 {
     class ProcessAdapter : IProcess
     {

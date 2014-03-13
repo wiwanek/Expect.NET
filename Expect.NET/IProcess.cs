@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Expect
+namespace ExpectNet
 {
     interface IProcess
     {

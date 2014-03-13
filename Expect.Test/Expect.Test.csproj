@@ -6,7 +6,7 @@
     <ProjectGuid>{06C9104D-53A3-424F-A7A3-DACBF0D60820}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Expect.Test</RootNamespace>
+    <RootNamespace>ExpectNet.NET.Test</RootNamespace>
     <AssemblyName>Expect.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

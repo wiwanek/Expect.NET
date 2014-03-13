@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Expect;
+using ExpectNet;
 using Moq;
 
-namespace Expect.Test
+namespace ExpectNet.Test
 {
     [TestClass]
     public class ExpectTest

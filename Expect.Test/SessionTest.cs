@@ -4,7 +4,7 @@ using Moq;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace Expect.Test
+namespace ExpectNet.Test
 {
     [TestClass]
     public class SessionTest

@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using Moq;
 
-namespace Expect.Test
+namespace ExpectNet.Test
 {
     [TestClass]
     public class ProcessSpawnableTest

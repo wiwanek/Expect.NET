@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Expect
+namespace ExpectNet
 {
     public interface ISpawnable
     {

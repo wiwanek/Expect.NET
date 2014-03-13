@@ -7,7 +7,7 @@
     <ProjectGuid>{8AA52B5E-DB66-4B0B-AABA-9E6900BC3D5A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Expect</RootNamespace>
+    <RootNamespace>ExpectNet.NET</RootNamespace>
     <AssemblyName>Expect.NET</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -60,18 +60,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandBackendFactory.cs" />
     <Compile Include="Expect.cs" />
-    <Compile Include="IBackendFactory.cs" />
     <Compile Include="IProcess.cs" />
     <Compile Include="ISession.cs" />
     <Compile Include="ISpawnable.cs" />
     <Compile Include="ProcessAdapter.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="ProcessSpawnable.cs" />
-    <Compile Include="CommandSpawnable.cs" />
-    <Compile Include="IBackend.cs" />
-    <Compile Include="Spawn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

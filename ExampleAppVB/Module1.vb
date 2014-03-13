@@ -1,9 +1,10 @@
-﻿Imports Expect
+﻿Imports ExpectNET
+
 
 Module Module1
 
     Sub Main()
-        Dim session As ISession = Expect.Expect.Spawn(New ProcessSpawnable("cmd.exe"))
+        Dim session As ISession = Expect.Spawn(New ProcessSpawnable("cmd.exe"))
         Try
             session.Expect(">", Sub(s) Console.WriteLine("Prompt --> " + s))
             session.SetTimeout(1000)

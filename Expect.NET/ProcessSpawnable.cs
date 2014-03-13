@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Expect
+namespace ExpectNet
 {
     /// <summary>
     /// Represents spawnable shell command

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Expect
+namespace ExpectNet
 {
     /// <summary>
     /// Executes code when expected string is found by Expect function
