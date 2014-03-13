@@ -3,16 +3,19 @@
 Module Module1
 
     Sub Main()
-        'Dim spawn As Spawn = New SpawnCommand("cmd.exe")
-        'Try
-        '    spawn.Expect(">", Sub(s) Console.WriteLine("Prompt --> " + s))
-        '    spawn.SetTimeout(1000)
-        '    spawn.Send("dir c:\" + Environment.NewLine)
-        '    spawn.Expect("Program Files", Sub(s) Console.WriteLine(s))
-        'Catch ex As System.TimeoutException
-        '    Console.WriteLine("Timeout")
-        'End Try
-
+        Dim session As ISession = Expect.Expect.Spawn(New ProcessSpawnable("cmd.exe"))
+        Try
+            session.Expect(">", Sub(s) Console.WriteLine("Prompt --> " + s))
+            session.SetTimeout(1000)
+            session.Send("dir c:\" + Environment.NewLine)
+            session.Expect("Program Files", Sub(s) Console.WriteLine(s))
+            session.Expect(">", Sub() session.Send("ping 8.8.8.8" + Environment.NewLine))
+        Catch ex As System.TimeoutException
+            Console.WriteLine("Timeout")
+        End Try
+        session.SetTimeout(5000)
+        session.Expect("Lost = 0", Sub() session.Send("ping 8.8.8.8" + Environment.NewLine))
+        session.Expect("Lost = 0", Sub(s) Console.WriteLine(s))
         Console.WriteLine("Done")
         Console.ReadKey()
     End Sub
