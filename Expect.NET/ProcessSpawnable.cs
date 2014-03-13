@@ -138,22 +138,7 @@ namespace Expect
         /// <returns>text read from streams</returns>
         public string Read()
         {
-            //StreamReaderThread outputThread = new StreamReaderThread(_process.StandardOutput);
-            //StreamReaderThread errorThread = new StreamReaderThread(_process.StandardError);
-            //Thread t1 = new Thread(new ThreadStart(outputThread.Read));
-            //Thread t2 = new Thread(new ThreadStart(errorThread.Read));
-            //t1.Start();
-            //t2.Start();
-            //while (t1.IsAlive && t2.IsAlive)
-            //{
-            //    Thread.Yield();
-            //}
-            //t1.Abort();
-            //t2.Abort();
-            //return errorThread.Output + outputThread.Output;
-            //Task<string> t = ReadAsync();
             var t = Task.Run(async () => { return await ReadAsync().ConfigureAwait(false); });
-            //t.Wait();
             return t.Result;
 
         }
