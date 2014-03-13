@@ -36,14 +36,43 @@ namespace ExampleApp
                     Console.WriteLine("Timeout 8.8.8.8!");
                 }
                 spawn.SetTimeout(5000);
-                spawn.Expect(@">", () => spawn.Send("ping 8.8.4.4\n"));
+                spawn.Send("ping 8.8.4.4\n");
                 try
                 {
-                    spawn.Expect("Ping statistics", s => Console.WriteLine(s));
+                    spawn.Expect("Ping statistics for 8.8.4.4", s => Console.WriteLine(s));
+                    for (int i = 0; i < 6; i++)
+                    {
+                        Console.WriteLine(i);
+                        Thread.Sleep(1000);
+                    }
                 }
                 catch (System.TimeoutException)
                 {
                     Console.WriteLine("Timeout 8.8.4.4!");
+                }
+
+                Console.WriteLine("Using ExpectAsync");
+                spawn.Send("ping 8.8.8.8\n");
+                spawn.Send("ping google.com\n");
+                try
+                {
+                    spawn.ExpectAsync("Ping statistics for 8.8.8.8", s => Console.WriteLine(s));
+                    for (int i = 0; i < 6; i++)
+                    {
+                        Console.WriteLine(i);
+                        Thread.Sleep(1000);
+                    }
+                    spawn.ExpectAsync("Ping statistics for", s => Console.WriteLine(s));
+                    for (int i = 0; i < 6; i++)
+                    {
+                        Console.WriteLine(i);
+                        Thread.Sleep(1000);
+                    }
+                
+                }
+                catch (System.TimeoutException)
+                {
+                    Console.WriteLine("Timeout 8.8.8.8!");
                 }
 
             }
