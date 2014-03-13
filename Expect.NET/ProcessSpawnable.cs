@@ -143,34 +143,6 @@ namespace Expect
 
         }
 
-        private class StreamReaderThread
-        {
-            internal string Output { get; private set; }
-            private StreamReader stream;
-
-            internal StreamReaderThread(StreamReader stream)
-            {
-                this.stream = stream;
-            }
-
-            internal void Read()
-            {
-                try
-                {
-                    int maxSize = 4096;
-                    char[] tmp = new char[maxSize];
-                    Task<int> task = stream.ReadAsync(tmp, 0, maxSize);
-                    task.Wait();
-                    int n = task.Result;
-                    Output = new string(tmp, 0, n);
-                }
-                catch (ThreadAbortException)
-                {
-                    Output = "";
-                    Thread.ResetAbort();
-                }
-            }
-        } 
     
     }
 
