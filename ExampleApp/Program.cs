@@ -35,7 +35,7 @@ namespace ExampleApp
                 {
                     Console.WriteLine("Timeout 8.8.8.8!");
                 }
-                spawn.SetTimeout(5000);
+                spawn.Timeout = 5000;
                 spawn.Send("ping 8.8.4.4\n");
                 try
                 {

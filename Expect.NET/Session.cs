@@ -54,22 +54,23 @@ namespace ExpectNet
             }
 
         }
-
-        public int GetTimeout()
+        public int Timeout
         {
-            return _timeout;
-        }
 
-        public void SetTimeout(int timeout)
-        {
-            if (timeout <= 0)
+            get { return _timeout; }
+
+
+            set
             {
-                throw new ArgumentOutOfRangeException("timeout", "Value must be larger than zero");
+                if (value <= 0)
+                {
+                    throw new ArgumentException("Value must be larger than zero");
+                }
+                _timeout = value;
             }
-            _timeout = timeout;
+
         }
 
-        
         public async Task ExpectAsync(string query, ExpectedHandler handler)
         {
             await ExpectAsync(query, s => handler()).ConfigureAwait(false);

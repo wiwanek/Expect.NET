@@ -120,7 +120,7 @@ namespace ExpectNet.Test
             var spawnable = new Mock<ISpawnable>();
             spawnable.Setup(p => p.Read()).Returns(() => ReturnStringAfterDelay("test expected string test", 1000));
             ISession session = new Session(spawnable.Object);
-            session.SetTimeout(500);
+            session.Timeout = 500;
             Exception exc = null;
             bool funcCalled = false;
 
@@ -144,7 +144,7 @@ namespace ExpectNet.Test
             var spawnable = new Mock<ISpawnable>();
             spawnable.Setup(p => p.Read()).Returns(ReturnStringAfterDelay("test expected string test", 1200));
             ISession session = new Session(spawnable.Object);
-            session.SetTimeout(2400);
+            session.Timeout = 2400;
             Exception exc = null;
             bool funcCalled = false;
 
@@ -167,7 +167,7 @@ namespace ExpectNet.Test
             var spawnable = new Mock<ISpawnable>();
             spawnable.Setup(p => p.ReadAsync()).Returns(ReturnStringAfterDelayAsync("test expected string test", 1200));
             ISession session = new Session(spawnable.Object);
-            session.SetTimeout(500);
+            session.Timeout = 500;
             Exception exc = null;
             bool funcCalled = false;
 
@@ -191,7 +191,7 @@ namespace ExpectNet.Test
             var spawnable = new Mock<ISpawnable>();
             spawnable.Setup(p => p.ReadAsync()).Returns(ReturnStringAfterDelayAsync("test expected string test", 1200));
             ISession session = new Session(spawnable.Object);
-            session.SetTimeout(2400);
+            session.Timeout = 2400;
             Exception exc = null;
             bool funcCalled = false;
 
@@ -213,8 +213,8 @@ namespace ExpectNet.Test
         {
             var spawnable = new Mock<ISpawnable>();
             ISession session = new Session(spawnable.Object);
-            session.SetTimeout(2400);
-            Assert.AreEqual(2400, session.GetTimeout());
+            session.Timeout = 2400;
+            Assert.AreEqual(2400, session.Timeout);
         }
 
         [TestMethod]
@@ -222,8 +222,8 @@ namespace ExpectNet.Test
         {
             var spawnable = new Mock<ISpawnable>();
             ISession session = new Session(spawnable.Object);
-            session.SetTimeout(200);
-            Assert.AreEqual(200, session.GetTimeout());
+            session.Timeout  = 200;
+            Assert.AreEqual(200, session.Timeout);
         }
 
         [TestMethod]
@@ -232,12 +232,12 @@ namespace ExpectNet.Test
             var spawnable = new Mock<ISpawnable>();
             ISession session = new Session(spawnable.Object);
             Exception exc = null;
-            ArgumentOutOfRangeException aoorexc = null;
+            ArgumentException aoorexc = null;
             try
             {
-                session.SetTimeout(-1);
+                session.Timeout = -1;
             }
-            catch (ArgumentOutOfRangeException aoore)
+            catch (ArgumentException aoore)
             {
                 aoorexc = aoore;
             }
@@ -248,7 +248,6 @@ namespace ExpectNet.Test
 
             Assert.IsNull(exc);
             Assert.IsNotNull(aoorexc);
-            Assert.AreEqual("timeout", aoorexc.ParamName);
         }
 
         [TestMethod]

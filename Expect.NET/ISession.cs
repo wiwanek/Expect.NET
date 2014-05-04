@@ -75,17 +75,9 @@ namespace ExpectNet
         Task ExpectAsync(string query, ExpectedHandlerWithOutput handler);
 
         /// <summary>
-        /// Returns configured timeout value for Expect function
+        /// Timeout value in miliseconds for Expect function
         /// </summary>
-        /// <returns>timeout value in miliseconds for Expect function</returns>
-        int GetTimeout();
+        int Timeout { get; set; }
 
-        /// <summary>
-        /// Sets timeout value for Expect function
-        /// </summary>
-        /// <param name="timeout">timeout value in miliseconds for Expect function</param>
-        void SetTimeout(int timeout);
-
-
-    }
+        }
 }
