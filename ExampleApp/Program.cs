@@ -15,7 +15,7 @@ namespace ExampleApp
             try
             {
                 Console.WriteLine("ExampleApp");
-                ISession spawn = ExpectNet.Expect.Spawn(new ProcessSpawnable("cmd.exe"));
+                Session spawn = Expect.Spawn(new ProcessSpawnable("cmd.exe"));
                 spawn.Expect(">", s => Console.WriteLine("got: " + s));
                 spawn.Send("dir c:\\\n");
                 spawn.Expect("Program", (s) => Console.WriteLine("found: " + s));

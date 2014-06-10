@@ -25,7 +25,7 @@ namespace ExpectNet.Test
         public void SendTest()
         {
             var spawnable = new Mock<ISpawnable>();
-            ISession session = new Session(spawnable.Object);
+            Session session = new Session(spawnable.Object);
             string command = "test command";
 
             session.Send(command);
@@ -38,7 +38,7 @@ namespace ExpectNet.Test
         {
             var spawnable = new Mock<ISpawnable>();
             spawnable.Setup(p => p.Read()).Callback(() => Thread.Sleep(1000)).Returns("test expected string test");
-            ISession session = new Session(spawnable.Object);
+            Session session = new Session(spawnable.Object);
             bool funcCalled = false;
 
             session.Expect("expected string", () => funcCalled = true);
@@ -51,7 +51,7 @@ namespace ExpectNet.Test
         {
             var spawnable = new Mock<ISpawnable>();
             spawnable.Setup(p => p.Read()).Returns(ReturnStringAfterDelay("test expected string test", 10));
-            ISession session = new Session(spawnable.Object);
+            Session session = new Session(spawnable.Object);
             bool funcCalled = false;
 
             string output = "";
@@ -69,7 +69,7 @@ namespace ExpectNet.Test
             string[] strings = {ReturnStringAfterDelay("test expected ", 100), 
                                      ReturnStringAfterDelay("string test", 150)};
             spawnable.Setup(p => p.Read()).Returns(() => strings[i]).Callback(() => i++);
-            ISession session = new Session(spawnable.Object);
+            Session session = new Session(spawnable.Object);
             bool funcCalled = false;
 
             session.Expect("expected string", () => funcCalled = true);
@@ -86,7 +86,7 @@ namespace ExpectNet.Test
             string[] strings = {ReturnStringAfterDelay("test expected ", 100), 
                                      ReturnStringAfterDelay("string test", 150)};
             spawnable.Setup(p => p.Read()).Returns(() => strings[i]).Callback(() => i++);
-            ISession session = new Session(spawnable.Object);
+            Session session = new Session(spawnable.Object);
             bool funcCalled = false;
             string output = "";
 
@@ -106,7 +106,7 @@ namespace ExpectNet.Test
                                      ReturnStringAfterDelay("string test", 150),
                                    ReturnStringAfterDelay("next expected string", 100)};
             spawnable.Setup(p => p.Read()).Returns(() => strings[i]).Callback(() => i++);
-            ISession session = new Session(spawnable.Object);
+            Session session = new Session(spawnable.Object);
             string output = "";
 
             session.Expect("expected string", (s) => { session.Send("test"); });
@@ -119,7 +119,7 @@ namespace ExpectNet.Test
         {
             var spawnable = new Mock<ISpawnable>();
             spawnable.Setup(p => p.Read()).Returns(() => ReturnStringAfterDelay("test expected string test", 1000));
-            ISession session = new Session(spawnable.Object);
+            Session session = new Session(spawnable.Object);
             session.Timeout = 500;
             Exception exc = null;
             bool funcCalled = false;
@@ -143,7 +143,7 @@ namespace ExpectNet.Test
         {
             var spawnable = new Mock<ISpawnable>();
             spawnable.Setup(p => p.Read()).Returns(ReturnStringAfterDelay("test expected string test", 1200));
-            ISession session = new Session(spawnable.Object);
+            Session session = new Session(spawnable.Object);
             session.Timeout = 2400;
             Exception exc = null;
             bool funcCalled = false;
@@ -166,7 +166,7 @@ namespace ExpectNet.Test
         {
             var spawnable = new Mock<ISpawnable>();
             spawnable.Setup(p => p.ReadAsync()).Returns(ReturnStringAfterDelayAsync("test expected string test", 1200));
-            ISession session = new Session(spawnable.Object);
+            Session session = new Session(spawnable.Object);
             session.Timeout = 500;
             Exception exc = null;
             bool funcCalled = false;
@@ -190,7 +190,7 @@ namespace ExpectNet.Test
         {
             var spawnable = new Mock<ISpawnable>();
             spawnable.Setup(p => p.ReadAsync()).Returns(ReturnStringAfterDelayAsync("test expected string test", 1200));
-            ISession session = new Session(spawnable.Object);
+            Session session = new Session(spawnable.Object);
             session.Timeout = 2400;
             Exception exc = null;
             bool funcCalled = false;
@@ -212,7 +212,7 @@ namespace ExpectNet.Test
         public void SetGetTimeout2400Test()
         {
             var spawnable = new Mock<ISpawnable>();
-            ISession session = new Session(spawnable.Object);
+            Session session = new Session(spawnable.Object);
             session.Timeout = 2400;
             Assert.AreEqual(2400, session.Timeout);
         }
@@ -221,7 +221,7 @@ namespace ExpectNet.Test
         public void SetGetTimeout200Test()
         {
             var spawnable = new Mock<ISpawnable>();
-            ISession session = new Session(spawnable.Object);
+            Session session = new Session(spawnable.Object);
             session.Timeout  = 200;
             Assert.AreEqual(200, session.Timeout);
         }
@@ -230,7 +230,7 @@ namespace ExpectNet.Test
         public void SetGetTimeoutIncorrectValueTest()
         {
             var spawnable = new Mock<ISpawnable>();
-            ISession session = new Session(spawnable.Object);
+            Session session = new Session(spawnable.Object);
             Exception exc = null;
             ArgumentException aoorexc = null;
             try
@@ -255,7 +255,7 @@ namespace ExpectNet.Test
         {
             var spawnable = new Mock<ISpawnable>();
             spawnable.Setup(p => p.ReadAsync()).Returns(ReturnStringAfterDelayAsync("test expected string test", 10));
-            ISession session = new Session(spawnable.Object);
+            Session session = new Session(spawnable.Object);
             bool funcCalled = false;
 
             Task task = session.ExpectAsync("expected string", () => funcCalled = true);
@@ -269,7 +269,7 @@ namespace ExpectNet.Test
         {
             var spawnable = new Mock<ISpawnable>();
             spawnable.Setup(p => p.ReadAsync()).Returns(ReturnStringAfterDelayAsync("test expected string test", 10));
-            ISession session = new Session(spawnable.Object);
+            Session session = new Session(spawnable.Object);
             bool funcCalled = false;
 
             string output = "";
@@ -287,7 +287,7 @@ namespace ExpectNet.Test
             Task<string>[] tasks = {ReturnStringAfterDelayAsync("test expected ", 100), 
                                      ReturnStringAfterDelayAsync("string test", 150)};
             spawnable.Setup(p => p.ReadAsync()).Returns(() => tasks[i]).Callback(() => i++);
-            ISession session = new Session(spawnable.Object);
+            Session session = new Session(spawnable.Object);
             bool funcCalled = false;
 
             session.ExpectAsync("expected string", () => funcCalled = true).Wait();
@@ -304,7 +304,7 @@ namespace ExpectNet.Test
             Task<string>[] tasks = {ReturnStringAfterDelayAsync("test expected ", 100), 
                                      ReturnStringAfterDelayAsync("string test", 150)};
             spawnable.Setup(p => p.ReadAsync()).Returns(() => tasks[i]).Callback(() => i++);
-            ISession session = new Session(spawnable.Object);
+            Session session = new Session(spawnable.Object);
             bool funcCalled = false;
             string output = "";
 
@@ -324,7 +324,7 @@ namespace ExpectNet.Test
                                      ReturnStringAfterDelayAsync("string test", 150),
                                    ReturnStringAfterDelayAsync("next expected string", 100)};
             spawnable.Setup(p => p.ReadAsync()).Returns(() => tasks[i]).Callback(() => i++);
-            ISession session = new Session(spawnable.Object);
+            Session session = new Session(spawnable.Object);
             string output = "";
 
             session.ExpectAsync("expected string", (s) => { session.Send("test"); }).Wait();

@@ -4,7 +4,7 @@
 Module Module1
 
     Sub Main()
-        Dim session As ISession = Expect.Spawn(New ProcessSpawnable("cmd.exe"))
+        Dim session As Session = Expect.Spawn(New ProcessSpawnable("cmd.exe"))
         Try
             session.Expect(">", Sub(s) Console.WriteLine("Prompt --> " + s))
             session.Timeout = 1000

@@ -8,7 +8,7 @@ namespace ExpectNet
 {
     public class Expect
     {
-        public static ISession Spawn(ISpawnable spawnable) 
+        public static Session Spawn(ISpawnable spawnable) 
         {
             spawnable.Init();
             return new Session(spawnable);

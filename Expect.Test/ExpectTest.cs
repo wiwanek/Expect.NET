@@ -25,7 +25,7 @@ namespace ExpectNet.Test
 
             var session = Expect.Spawn(spawnable.Object);
 
-            Assert.IsInstanceOfType(session, typeof(ISession));
+            Assert.IsInstanceOfType(session, typeof(Session));
             Assert.IsNotNull(session);
         }
     }

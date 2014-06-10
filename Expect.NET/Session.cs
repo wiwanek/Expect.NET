@@ -8,7 +8,20 @@ using System.Threading.Tasks;
 
 namespace ExpectNet
 {
-    class Session : ISession
+    /// <summary>
+    /// Executes code when expected string is found by Expect function
+    /// </summary>
+    public delegate void ExpectedHandler();
+
+    /// <summary>
+    /// Executes code when expected string is found by Expect function.
+    /// Receives session output to handle.
+    /// </summary>
+    /// <param name="output">session output with expected pattern</param>
+    public delegate void ExpectedHandlerWithOutput(string output);
+
+    
+    public class Session
     {
         private ISpawnable _spawnable;
         private string _output;
@@ -19,16 +32,43 @@ namespace ExpectNet
             _spawnable = spawnable;
         }
 
+        /// <summary>
+        /// Sends characters to the session.
+        /// </summary>
+        /// <remarks>
+        /// To send enter you have to add '\n' at the end.
+        /// </remarks>
+        /// <example>
+        /// Send("cmd.exe\n");
+        /// </example>
+        /// <param name="command">String to be sent to session</param>
         public void Send(string command)
         {
             _spawnable.Write(command);
         }
 
+        /// <summary>
+        /// Waits until query is printed on session output and 
+        /// executes handler
+        /// </summary>
+        /// <param name="query">expected output</param>
+        /// <param name="handler">action to be performed</param>
+        /// <exception cref="System.TimeoutException">Thrown when query is not find for given
+        /// amount of time</exception>
         public void Expect(string query, ExpectedHandler handler)
         {
             Expect(query, (s) => handler());
         }
 
+        /// <summary>
+        /// Waits until query is printed on session output and 
+        /// executes handler. The output including expected query is
+        /// passed to handler.
+        /// </summary>
+        /// <param name="query">expected output</param>
+        /// <param name="handler">action to be performed, it accepts session output as ana argument</param>
+        /// <exception cref="System.TimeoutException">Thrown when query is not find for given
+        /// amount of time</exception>
         public void Expect(string query, ExpectedHandlerWithOutput handler)
         {
             var tokenSource = new CancellationTokenSource();
@@ -54,6 +94,9 @@ namespace ExpectNet
             }
 
         }
+        /// <summary>
+        /// Timeout value in miliseconds for Expect function
+        /// </summary>
         public int Timeout
         {
 
@@ -71,11 +114,28 @@ namespace ExpectNet
 
         }
 
+        /// <summary>
+        /// Waits until query is printed on session output and 
+        /// executes handler
+        /// </summary>
+        /// <param name="query">expected output</param>
+        /// <param name="handler">action to be performed</param>
+        /// <exception cref="System.TimeoutException">Thrown when query is not find for given
+        /// amount of time</exception>
         public async Task ExpectAsync(string query, ExpectedHandler handler)
         {
             await ExpectAsync(query, s => handler()).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Waits until query is printed on session output and 
+        /// executes handler. The output including expected query is
+        /// passed to handler.
+        /// </summary>
+        /// <param name="query">expected output</param>
+        /// <param name="handler">action to be performed, it accepts session output as ana argument</param>
+        /// <exception cref="System.TimeoutException">Thrown when query is not find for given
+        /// amount of time</exception>
         public async Task ExpectAsync(string query, ExpectedHandlerWithOutput handler)
         {
             Task timeoutTask = null;
