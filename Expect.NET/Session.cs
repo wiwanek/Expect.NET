@@ -20,7 +20,9 @@ namespace ExpectNet
     /// <param name="output">session output with expected pattern</param>
     public delegate void ExpectedHandlerWithOutput(string output);
 
-    
+    /// <summary>
+    /// Represents spawned session. Delivers functions to automate interactive operations.
+    /// </summary>
     public class Session
     {
         private ISpawnable _spawnable;
