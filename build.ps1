@@ -10,7 +10,7 @@ properties {
   $minor = 0
   $patch = 0
   $build = 0
-  $label = "rc"
+  $label = ""
   $version_assembly = "$major.$minor.$patch.$build"
   $version_nuget = "$major.$minor.$patch"
   if ( $label -ne "" ) {
