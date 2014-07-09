@@ -97,7 +97,7 @@ namespace ExpectNet
 
         }
         /// <summary>
-        /// Timeout value in miliseconds for Expect function
+        /// Timeout value in milliseconds for Expect function
         /// </summary>
         public int Timeout
         {
