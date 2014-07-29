@@ -47,6 +47,16 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EsxpectSshNet\ExpectSshNet.csproj">
+      <Project>{3f545cf8-5980-49e7-b341-666aa58c1411}</Project>
+      <Name>ExpectSshNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Expect.NET\Expect.csproj">
+      <Project>{8aa52b5e-db66-4b0b-aaba-9e6900bc3d5a}</Project>
+      <Name>Expect</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
