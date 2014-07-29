@@ -80,7 +80,7 @@ namespace ExpectNet
                 while (!ct.IsCancellationRequested && !expectedQueryFound)
                 {
                     _output += _spawnable.Read();
-                    expectedQueryFound = Regex.Match(_output, query).Success;
+                    expectedQueryFound = _output.Contains(query);
                 }
             }, ct);
             if (task.Wait(_timeout, ct))
@@ -158,7 +158,7 @@ namespace ExpectNet
                 if (task == any)
                 {
                     _output += await task.ConfigureAwait(false);
-                    expectedQueryFound = Regex.Match(_output, query).Success;
+                    expectedQueryFound = _output.Contains(query);
                     if (expectedQueryFound)
                     {
                         handler(_output);
