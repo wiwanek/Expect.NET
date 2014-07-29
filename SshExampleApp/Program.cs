@@ -13,7 +13,10 @@ namespace SshExampleApp
     {
         static void Main(string[] args)
         {
-            Session session = Expect.Spawn(new SshSpawnable("192.168.10.150", "test", "test"));
+            string hostname = "server";
+            string user = "test";
+            string password = "test";
+            Session session = Expect.Spawn(new SshSpawnable(hostname, user, password));
             session.Expect("$ ", () => session.Send("ls -al\n"));
             session.Expect("$ ", (s) => Console.WriteLine(s));
             session.Send("uname -a\n");
