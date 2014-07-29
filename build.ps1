@@ -8,7 +8,7 @@ properties {
   $sln_file = "$base_dir\\Expect.NET.sln" 
   $major = 2
   $minor = 0
-  $patch = 0
+  $patch = 1
   $build = 0
   $label = ""
   $version_assembly = "$major.$minor.$patch.$build"
