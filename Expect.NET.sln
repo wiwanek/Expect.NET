@@ -29,9 +29,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ExampleAppVB", "ExampleAppVB\ExampleAppVB.vbproj", "{653681DA-40E0-4556-8735-D7796F27601A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EsxpectSshNet", "EsxpectSshNet\EsxpectSshNet.csproj", "{3F545CF8-5980-49E7-B341-666AA58C1411}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpectSshNet", "EsxpectSshNet\ExpectSshNet.csproj", "{3F545CF8-5980-49E7-B341-666AA58C1411}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SshExampleApp", "SshExampleApp\SshExampleApp.csproj", "{CAB62544-82D2-4A2A-A585-DF671AB0B65B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3F545CF8-5980-49E7-B341-666AA58C1411} = {3F545CF8-5980-49E7-B341-666AA58C1411}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

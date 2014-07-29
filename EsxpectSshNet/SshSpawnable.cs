@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EsxpectSshNet
+namespace ExpectSshNet
 {
     public class SshSpawnable : ISpawnable
     {
@@ -17,7 +17,7 @@ namespace EsxpectSshNet
         private string user;
         private string password;
 
-        SshSpawnable(string server, string user, string password)
+        public SshSpawnable(string server, string user, string password)
         {
             this.server = server;
             this.user = user;
@@ -35,13 +35,17 @@ namespace EsxpectSshNet
 
         public string Read()
         {
-            return reader.ReadLine();
+            char[] buffer = new char[1024];
+            int read = reader.Read(buffer, 0, 1024);
+            return new string(buffer, 0, read);
             
         }
 
         public async Task<string> ReadAsync()
         {
-            return await reader.ReadLineAsync(); 
+            char[] buffer = new char[1024];
+            int read = await reader.ReadAsync(buffer, 0, 1024).ConfigureAwait(false);
+            return new string(buffer, 0, read);
         }
 
         public void Write(string command)
