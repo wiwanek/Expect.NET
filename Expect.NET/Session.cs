@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using ExpectNet.NET;
 
 namespace ExpectNet
 {
@@ -71,6 +72,11 @@ namespace ExpectNet
         /// amount of time</exception>
         public void Expect(string query, ExpectedHandlerWithOutput handler)
         {
+            Expect(new StringContainsMatcher(query), (s) => handler(s));
+        }
+
+        private void Expect(IMatcher matcher, ExpectedHandlerWithOutput handler)
+        {
             var tokenSource = new CancellationTokenSource();
             CancellationToken ct = tokenSource.Token;
             _output = "";
@@ -80,7 +86,7 @@ namespace ExpectNet
                 while (!ct.IsCancellationRequested && !expectedQueryFound)
                 {
                     _output += _spawnable.Read();
-                    expectedQueryFound = _output.Contains(query);
+                    expectedQueryFound = matcher.IsMatch(_output);
                 }
             }, ct);
             if (task.Wait(_timeout, ct))
@@ -94,6 +100,7 @@ namespace ExpectNet
             }
 
         }
+
         /// <summary>
         /// Timeout value in miliseconds for Expect function
         /// </summary>
@@ -133,10 +140,15 @@ namespace ExpectNet
         /// passed to handler.
         /// </summary>
         /// <param name="query">expected output</param>
-        /// <param name="handler">action to be performed, it accepts session output as ana argument</param>
+        /// <param name="handler">action to be performed, it accepts session output as an argument</param>
         /// <exception cref="System.TimeoutException">Thrown when query is not find for given
         /// amount of time</exception>
         public async Task ExpectAsync(string query, ExpectedHandlerWithOutput handler)
+        {
+            await ExpectAsync(new StringContainsMatcher(query), (s) => handler(s)).ConfigureAwait(false);
+        }
+        
+        private async Task ExpectAsync(IMatcher matcher, ExpectedHandlerWithOutput handler)
         {
             Task timeoutTask = null;
             if (_timeout > 0)
@@ -158,7 +170,7 @@ namespace ExpectNet
                 if (task == any)
                 {
                     _output += await task.ConfigureAwait(false);
-                    expectedQueryFound = _output.Contains(query);
+                    expectedQueryFound = matcher.IsMatch(_output);
                     if (expectedQueryFound)
                     {
                         handler(_output);
@@ -171,24 +183,59 @@ namespace ExpectNet
             }
         }
 
+        /// <summary>
+        /// Waits until text matching to regular expression is printed on session output and 
+        /// executes handler. 
+        /// </summary>
+        /// <param name="query">expected output</param>
+        /// <param name="handler">action to be performed</param>
+        /// <exception cref="System.TimeoutException">Thrown when query is not find for given
+        /// amount of time</exception>
         internal void Expect(Regex regex, ExpectedHandler expectedHandler)
         {
-            throw new NotImplementedException();
+            Expect(regex, s => expectedHandler());
         }
 
+        /// <summary>
+        /// Waits until text matching to regular expression is printed on session output and 
+        /// executes handler. The output including expected query is
+        /// passed to handler.
+        /// </summary>
+        /// <param name="query">expected output</param>
+        /// <param name="handler">action to be performed, it accepts session output as an argument</param>
+        /// <exception cref="System.TimeoutException">Thrown when query is not find for given
+        /// amount of time</exception>
         internal void Expect(Regex regex, ExpectedHandlerWithOutput expectedHandler)
         {
-            throw new NotImplementedException();
+            Expect(new RegexMatcher(regex), (s) => expectedHandler(s));
         }
 
-        internal Task ExpectAsync(Regex regex, ExpectedHandler expectedHandler)
+        /// <summary>
+        /// Waits until text matching to regular expression is printed on session output and 
+        /// executes handler. 
+        /// </summary>
+        /// <param name="query">expected output</param>
+        /// <param name="handler">action to be performed</param>
+        /// <exception cref="System.TimeoutException">Thrown when query is not find for given
+        /// amount of time</exception>
+        internal async Task ExpectAsync(Regex regex, ExpectedHandler expectedHandler)
         {
-            throw new NotImplementedException();
+            await ExpectAsync(regex, s => expectedHandler()).ConfigureAwait(false);
+
         }
 
-        internal Task ExpectAsync(Regex regex, ExpectedHandlerWithOutput expectedHandler)
+        /// <summary>
+        /// Waits until text matching to regular expression is printed on session output and 
+        /// executes handler. The output including expected query is
+        /// passed to handler.
+        /// </summary>
+        /// <param name="query">expected output</param>
+        /// <param name="handler">action to be performed, it accepts session output as an argument</param>
+        /// <exception cref="System.TimeoutException">Thrown when query is not find for given
+        /// amount of time</exception>
+        internal async Task ExpectAsync(Regex regex, ExpectedHandlerWithOutput expectedHandler)
         {
-            throw new NotImplementedException();
+            await ExpectAsync(new RegexMatcher(regex), (s) => expectedHandler(s)).ConfigureAwait(false);
         }
     }
 }

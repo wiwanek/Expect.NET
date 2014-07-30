@@ -462,7 +462,7 @@ namespace ExpectNet.Test
             bool funcCalled = false;
             string output = "";
 
-            session.ExpectAsync("expected \\w* test", (s) => { funcCalled = true; output = s; }).Wait();
+            session.ExpectAsync(new Regex("expected \\w* test"), (s) => { funcCalled = true; output = s; }).Wait();
 
             Assert.IsTrue(funcCalled);
             Assert.AreEqual(2, i);

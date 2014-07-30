@@ -61,12 +61,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Expect.cs" />
+    <Compile Include="IMatcher.cs" />
     <Compile Include="IProcess.cs" />
     <Compile Include="ISpawnable.cs" />
     <Compile Include="ProcessAdapter.cs" />
+    <Compile Include="RegexMatcher.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="ProcessSpawnable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringContainsMatcher.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="changelog.md" />
