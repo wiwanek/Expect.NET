@@ -170,5 +170,25 @@ namespace ExpectNet
                 }
             }
         }
+
+        internal void Expect(Regex regex, ExpectedHandler expectedHandler)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void Expect(Regex regex, ExpectedHandlerWithOutput expectedHandler)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal Task ExpectAsync(Regex regex, ExpectedHandler expectedHandler)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal Task ExpectAsync(Regex regex, ExpectedHandlerWithOutput expectedHandler)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

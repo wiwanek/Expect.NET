@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace ExpectNet.Test
 {
@@ -47,6 +48,19 @@ namespace ExpectNet.Test
         }
 
         [TestMethod]
+        public void BasicRegexExpectTest()
+        {
+            var spawnable = new Mock<ISpawnable>();
+            spawnable.Setup(p => p.Read()).Callback(() => Thread.Sleep(1000)).Returns("test expected string test");
+            Session session = new Session(spawnable.Object);
+            bool funcCalled = false;
+
+            session.Expect(new Regex("e\\w+d string"), () => funcCalled = true);
+
+            Assert.IsTrue(funcCalled);
+        }
+
+        [TestMethod]
         public void BasicExpectWithOutputTest()
         {
             var spawnable = new Mock<ISpawnable>();
@@ -56,6 +70,21 @@ namespace ExpectNet.Test
 
             string output = "";
             session.Expect("expected string", (s) => { funcCalled = true; output = s; });
+
+            Assert.IsTrue(funcCalled);
+            Assert.AreEqual("test expected string test", output);
+        }
+
+        [TestMethod]
+        public void BasicRegexExpectWithOutputTest()
+        {
+            var spawnable = new Mock<ISpawnable>();
+            spawnable.Setup(p => p.Read()).Returns(ReturnStringAfterDelay("test expected string test", 10));
+            Session session = new Session(spawnable.Object);
+            bool funcCalled = false;
+
+            string output = "";
+            session.Expect(new Regex("expected +string"), (s) => { funcCalled = true; output = s; });
 
             Assert.IsTrue(funcCalled);
             Assert.AreEqual("test expected string test", output);
@@ -79,7 +108,24 @@ namespace ExpectNet.Test
         }
 
         [TestMethod]
-        public void SplitResultExpectWitOutputTest()
+        public void SplitResultRegexExpectTest()
+        {
+            var spawnable = new Mock<ISpawnable>();
+            int i = 0;
+            string[] strings = {ReturnStringAfterDelay("test expected ", 100), 
+                                     ReturnStringAfterDelay("string test", 150)};
+            spawnable.Setup(p => p.Read()).Returns(() => strings[i]).Callback(() => i++);
+            Session session = new Session(spawnable.Object);
+            bool funcCalled = false;
+
+            session.Expect(new Regex("expect.*ing"), () => funcCalled = true);
+
+            Assert.IsTrue(funcCalled);
+            Assert.AreEqual(2, i);
+        }
+
+        [TestMethod]
+        public void SplitResultExpectWithOutputTest()
         {
             var spawnable = new Mock<ISpawnable>();
             int i = 0;
@@ -91,6 +137,25 @@ namespace ExpectNet.Test
             string output = "";
 
             session.Expect("expected string", (s) => { funcCalled = true; output = s; });
+
+            Assert.IsTrue(funcCalled);
+            Assert.AreEqual(2, i);
+            Assert.AreEqual("test expected string test", output);
+        }
+
+        [TestMethod]
+        public void SplitResultRegexExpectWithOutputTest()
+        {
+            var spawnable = new Mock<ISpawnable>();
+            int i = 0;
+            string[] strings = {ReturnStringAfterDelay("test expected ", 100), 
+                                     ReturnStringAfterDelay("string test", 150)};
+            spawnable.Setup(p => p.Read()).Returns(() => strings[i]).Callback(() => i++);
+            Session session = new Session(spawnable.Object);
+            bool funcCalled = false;
+            string output = "";
+
+            session.Expect(new Regex("e\\w+ string"), (s) => { funcCalled = true; output = s; });
 
             Assert.IsTrue(funcCalled);
             Assert.AreEqual(2, i);
@@ -186,6 +251,30 @@ namespace ExpectNet.Test
         }
 
         [TestMethod]
+        public async Task TimeoutThrownRegexExpectAsyncTest()
+        {
+            var spawnable = new Mock<ISpawnable>();
+            spawnable.Setup(p => p.ReadAsync()).Returns(ReturnStringAfterDelayAsync("test expected string test", 1200));
+            Session session = new Session(spawnable.Object);
+            session.Timeout = 500;
+            Exception exc = null;
+            bool funcCalled = false;
+
+            try
+            {
+                await session.ExpectAsync(new Regex("expec.*tring"), () => funcCalled = true);
+            }
+            catch (Exception e)
+            {
+                exc = e;
+            }
+
+            Assert.IsNotNull(exc);
+            Assert.IsInstanceOfType(exc, typeof(TimeoutException));
+            Assert.IsFalse(funcCalled);
+        }
+
+        [TestMethod]
         public async Task TimeoutNotThrownExpectAsyncTest()
         {
             var spawnable = new Mock<ISpawnable>();
@@ -265,6 +354,20 @@ namespace ExpectNet.Test
         }
 
         [TestMethod]
+        public void BasicRegexAsyncExpectTest()
+        {
+            var spawnable = new Mock<ISpawnable>();
+            spawnable.Setup(p => p.ReadAsync()).Returns(ReturnStringAfterDelayAsync("test expected string test", 10));
+            Session session = new Session(spawnable.Object);
+            bool funcCalled = false;
+
+            Task task = session.ExpectAsync(new Regex("exp.*ing"), () => funcCalled = true);
+            task.Wait();
+
+            Assert.IsTrue(funcCalled);
+        }
+
+        [TestMethod]
         public void BasicExpectAsyncWithOutputTest()
         {
             var spawnable = new Mock<ISpawnable>();
@@ -274,6 +377,21 @@ namespace ExpectNet.Test
 
             string output = "";
             session.ExpectAsync("expected string", (s) => { funcCalled = true; output = s; }).Wait();
+
+            Assert.IsTrue(funcCalled);
+            Assert.AreEqual("test expected string test", output);
+        }
+
+        [TestMethod]
+        public void BasicRegexExpectAsyncWithOutputTest()
+        {
+            var spawnable = new Mock<ISpawnable>();
+            spawnable.Setup(p => p.ReadAsync()).Returns(ReturnStringAfterDelayAsync("test expected string test", 10));
+            Session session = new Session(spawnable.Object);
+            bool funcCalled = false;
+
+            string output = "";
+            session.ExpectAsync(new Regex("e.*ed string"), (s) => { funcCalled = true; output = s; }).Wait();
 
             Assert.IsTrue(funcCalled);
             Assert.AreEqual("test expected string test", output);
@@ -297,7 +415,24 @@ namespace ExpectNet.Test
         }
 
         [TestMethod]
-        public void SplitResultExpectAsyncWitOutputTest()
+        public void SplitResultRegexExpectAsyncTest()
+        {
+            var spawnable = new Mock<ISpawnable>();
+            int i = 0;
+            Task<string>[] tasks = {ReturnStringAfterDelayAsync("test expected ", 100), 
+                                     ReturnStringAfterDelayAsync("string test", 150)};
+            spawnable.Setup(p => p.ReadAsync()).Returns(() => tasks[i]).Callback(() => i++);
+            Session session = new Session(spawnable.Object);
+            bool funcCalled = false;
+
+            session.ExpectAsync(new Regex("expected .* test"), () => funcCalled = true).Wait();
+
+            Assert.IsTrue(funcCalled);
+            Assert.AreEqual(2, i);
+        }
+
+        [TestMethod]
+        public void SplitResultExpectAsyncWithOutputTest()
         {
             var spawnable = new Mock<ISpawnable>();
             int i = 0;
@@ -309,6 +444,25 @@ namespace ExpectNet.Test
             string output = "";
 
             session.ExpectAsync("expected string", (s) => { funcCalled = true; output = s; }).Wait();
+
+            Assert.IsTrue(funcCalled);
+            Assert.AreEqual(2, i);
+            Assert.AreEqual("test expected string test", output);
+        }
+
+        [TestMethod]
+        public void SplitResultRegexExpectAsyncWithOutputTest()
+        {
+            var spawnable = new Mock<ISpawnable>();
+            int i = 0;
+            Task<string>[] tasks = {ReturnStringAfterDelayAsync("test expected ", 100), 
+                                     ReturnStringAfterDelayAsync("string test", 150)};
+            spawnable.Setup(p => p.ReadAsync()).Returns(() => tasks[i]).Callback(() => i++);
+            Session session = new Session(spawnable.Object);
+            bool funcCalled = false;
+            string output = "";
+
+            session.ExpectAsync("expected \\w* test", (s) => { funcCalled = true; output = s; }).Wait();
 
             Assert.IsTrue(funcCalled);
             Assert.AreEqual(2, i);
