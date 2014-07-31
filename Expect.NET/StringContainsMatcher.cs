@@ -12,6 +12,10 @@ namespace ExpectNet.NET
 
         public StringContainsMatcher(string query)
         {
+            if (query == null)
+            {
+                throw new ArgumentNullException("query");
+            }
             this.query = query;
         }
         public bool IsMatch(string text)

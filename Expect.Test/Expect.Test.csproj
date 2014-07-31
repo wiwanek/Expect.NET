@@ -66,10 +66,12 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ProcessSpawnableTest.cs" />
+    <Compile Include="StringContainsMatcherTest.cs" />
     <Compile Include="SpawnTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ExpectTest.cs" />
     <Compile Include="SessionTest.cs" />
+    <Compile Include="RegexMatcherTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Expect.NET\Expect.csproj">

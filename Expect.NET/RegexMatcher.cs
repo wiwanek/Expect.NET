@@ -11,6 +11,10 @@ namespace ExpectNet.NET
 
         public RegexMatcher(System.Text.RegularExpressions.Regex regex)
         {
+            if (regex == null)
+            {
+                throw new ArgumentNullException("regex");
+            }
             this.regex = regex;
         }
 
