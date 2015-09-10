@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expect", "Expect.NET\Expect.csproj", "{8AA52B5E-DB66-4B0B-AABA-9E6900BC3D5A}"
 EndProject
@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SshExampleApp", "SshExample
 	ProjectSection(ProjectDependencies) = postProject
 		{3F545CF8-5980-49E7-B341-666AA58C1411} = {3F545CF8-5980-49E7-B341-666AA58C1411}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PingTests", "ExampleAppTests\PingTests.csproj", "{D13A4EA9-165F-4EA8-B16A-6CED88074815}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +87,12 @@ Global
 		{CAB62544-82D2-4A2A-A585-DF671AB0B65B}.Nuget|Any CPU.Build.0 = Release|Any CPU
 		{CAB62544-82D2-4A2A-A585-DF671AB0B65B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CAB62544-82D2-4A2A-A585-DF671AB0B65B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D13A4EA9-165F-4EA8-B16A-6CED88074815}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D13A4EA9-165F-4EA8-B16A-6CED88074815}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D13A4EA9-165F-4EA8-B16A-6CED88074815}.Nuget|Any CPU.ActiveCfg = Release|Any CPU
+		{D13A4EA9-165F-4EA8-B16A-6CED88074815}.Nuget|Any CPU.Build.0 = Release|Any CPU
+		{D13A4EA9-165F-4EA8-B16A-6CED88074815}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D13A4EA9-165F-4EA8-B16A-6CED88074815}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
