@@ -24,7 +24,7 @@ namespace ExpectNet
         private string _output;
         private int _timeout = 2500;
 
-        internal Session(ISpawnable spawnable)
+        public Session(ISpawnable spawnable)
         {
             _spawnable = spawnable;
         }
