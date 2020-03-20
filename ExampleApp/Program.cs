@@ -7,6 +7,12 @@ namespace ExampleApp
     {
         static void Main(string[] args)
         {
+            Program p = new Program();
+            p.LinuxExample();
+        }
+
+        public void LinuxExample()
+        {
             try
             {
                 Console.WriteLine("ExampleApp");
