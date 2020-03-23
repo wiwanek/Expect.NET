@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,7 +18,7 @@ namespace ExpectNet
     /// <param name="output">session output with expected pattern</param>
     public delegate void ExpectedHandlerWithOutput(string output);
 
-    
+
     public class Session
     {
         private ISpawnable _spawnable;
@@ -58,6 +59,19 @@ namespace ExpectNet
         }
 
         /// <summary>
+        /// Waits until Regex query is printed on session output and 
+        /// executes handler
+        /// </summary>
+        /// <param name="query">expected output in RegEx</param>
+        /// <param name="handler">action to be performed</param>
+        /// <exception cref="System.TimeoutException">Thrown when query is not find for given
+        /// amount of time</exception>
+        public void ExpectMatch(string query, ExpectedHandler handler)
+        {
+            ExpectMatch(query, (s) => handler());
+        }
+
+        /// <summary>
         /// Waits until query is printed on session output and 
         /// executes handler. The output including expected query is
         /// passed to handler.
@@ -78,6 +92,45 @@ namespace ExpectNet
                 {
                     _output += _spawnable.Read();
                     expectedQueryFound = _output.Contains(query);
+                }
+            }, ct);
+            if (task.Wait(_timeout, ct))
+            {
+                handler(_output);
+            }
+            else
+            {
+                tokenSource.Cancel();
+                throw new TimeoutException();
+            }
+
+        }
+        /// <summary>
+        /// Waits until query is printed on session output and 
+        /// executes handler. The output including expected Regex query is
+        /// passed to handler.
+        /// </summary>
+        /// <param name="query">expected output in RegEx</param>
+        /// <param name="handler">action to be performed, it accepts session output as ana argument</param>
+        /// <exception cref="System.TimeoutException">Thrown when query is not find for given
+        /// amount of time</exception>
+        public void ExpectMatch(string query, ExpectedHandlerWithOutput handler)
+        {
+            var tokenSource = new CancellationTokenSource();
+            CancellationToken ct = tokenSource.Token;
+            _output = "";
+            bool expectedQueryFound = false;
+            Task task = Task.Factory.StartNew(() =>
+            {
+                while (!ct.IsCancellationRequested && !expectedQueryFound)
+                {
+                    _output += _spawnable.Read();
+                    foreach (string line in _output.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
+                    {
+                        Match matchfound = Regex.Match(line, query);
+                        if (matchfound.Success)
+                            expectedQueryFound = matchfound.Success;
+                    }
                 }
             }, ct);
             if (task.Wait(_timeout, ct))
@@ -156,6 +209,68 @@ namespace ExpectNet
                 {
                     _output += await task.ConfigureAwait(false);
                     expectedQueryFound = _output.Contains(query);
+                    if (expectedQueryFound)
+                    {
+                        handler(_output);
+                    }
+                }
+                else
+                {
+                    throw new TimeoutException();
+                }
+            }
+        }
+        /// <summary>
+        /// Waits until query is printed on session output and 
+        /// executes handler
+        /// </summary>
+        /// <param name="query">expected output in RegEx</param>
+        /// <param name="handler">action to be performed</param>
+        /// <exception cref="System.TimeoutException">Thrown when query is not find for given
+        /// amount of time</exception>
+        public async Task ExpectMatchAsync(string query, ExpectedHandler handler)
+        {
+            await ExpectMatchAsync(query, s => handler()).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Waits until query is printed on session output and 
+        /// executes handler. The output including expected query is
+        /// passed to handler.
+        /// </summary>
+        /// <param name="query">expected output in RegEx</param>
+        /// <param name="handler">action to be performed, it accepts session output as ana argument</param>
+        /// <exception cref="System.TimeoutException">Thrown when query is not find for given
+        /// amount of time</exception>
+        public async Task ExpectMatchAsync(string query, ExpectedHandlerWithOutput handler)
+        {
+            Task timeoutTask = null;
+            if (_timeout > 0)
+            {
+                timeoutTask = Task.Delay(_timeout);
+            }
+            _output = "";
+            bool expectedQueryFound = false;
+            while (!expectedQueryFound)
+            {
+                Task<string> task = _spawnable.ReadAsync();
+                IList<Task> tasks = new List<Task>();
+                tasks.Add(task);
+                if (timeoutTask != null)
+                {
+                    tasks.Add(timeoutTask);
+                }
+                Task any = await Task.WhenAny(tasks).ConfigureAwait(false);
+                if (task == any)
+                {
+                    _output += await task.ConfigureAwait(false);
+                    // expectedQueryFound = _output.Contains(query);
+                    foreach (string line in _output.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
+                    {
+                        Match matchfound = Regex.Match(line, query);
+                        if (matchfound.Success)
+                            expectedQueryFound = matchfound.Success;
+                    }
                     if (expectedQueryFound)
                     {
                         handler(_output);
