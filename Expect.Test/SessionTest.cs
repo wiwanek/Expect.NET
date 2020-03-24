@@ -62,11 +62,39 @@ namespace ExpectNet.Test
         }
 
         [TestMethod]
+        public void BasicExpectMatchTest()
+        {
+            var spawnable = new Mock<ISpawnable>();
+            spawnable.Setup(p => p.Read()).Callback(() => Thread.Sleep(1000)).Returns("test expected string test");
+            Session session = new Session(spawnable.Object);
+            bool funcCalled = false;
+
+            session.ExpectMatch("^test\\sexpected\\sstring", () => funcCalled = true);
+
+            Assert.IsTrue(funcCalled);
+        }
+
+        [TestMethod]
+        public void BasicExpectMatchWithOutputTest()
+        {
+            var spawnable = new Mock<ISpawnable>();
+            spawnable.Setup(p => p.Read()).Returns(ReturnStringAfterDelay("test expected string test", 10));
+            Session session = new Session(spawnable.Object);
+            bool funcCalled = false;
+
+            string output = "";
+            session.ExpectMatch("^test\\sexpected\\sstring", (s) => { funcCalled = true; output = s; });
+
+            Assert.IsTrue(funcCalled);
+            Assert.AreEqual("test expected string test", output);
+        }
+
+        [TestMethod]
         public void SplitResultExpectTest()
         {
             var spawnable = new Mock<ISpawnable>();
             int i = 0;
-            string[] strings = {ReturnStringAfterDelay("test expected ", 100), 
+            string[] strings = {ReturnStringAfterDelay("test expected ", 100),
                                      ReturnStringAfterDelay("string test", 150)};
             spawnable.Setup(p => p.Read()).Returns(() => strings[i]).Callback(() => i++);
             Session session = new Session(spawnable.Object);
@@ -83,7 +111,7 @@ namespace ExpectNet.Test
         {
             var spawnable = new Mock<ISpawnable>();
             int i = 0;
-            string[] strings = {ReturnStringAfterDelay("test expected ", 100), 
+            string[] strings = {ReturnStringAfterDelay("test expected ", 100),
                                      ReturnStringAfterDelay("string test", 150)};
             spawnable.Setup(p => p.Read()).Returns(() => strings[i]).Callback(() => i++);
             Session session = new Session(spawnable.Object);
@@ -102,7 +130,7 @@ namespace ExpectNet.Test
         {
             var spawnable = new Mock<ISpawnable>();
             int i = 0;
-            string[] strings = {ReturnStringAfterDelay("test expected ", 100), 
+            string[] strings = {ReturnStringAfterDelay("test expected ", 100),
                                      ReturnStringAfterDelay("string test", 150),
                                    ReturnStringAfterDelay("next expected string", 100)};
             spawnable.Setup(p => p.Read()).Returns(() => strings[i]).Callback(() => i++);
@@ -222,7 +250,7 @@ namespace ExpectNet.Test
         {
             var spawnable = new Mock<ISpawnable>();
             Session session = new Session(spawnable.Object);
-            session.Timeout  = 200;
+            session.Timeout = 200;
             Assert.AreEqual(200, session.Timeout);
         }
 
@@ -280,11 +308,40 @@ namespace ExpectNet.Test
         }
 
         [TestMethod]
+        public void BasicAsyncExpectMatchTest()
+        {
+            var spawnable = new Mock<ISpawnable>();
+            spawnable.Setup(p => p.ReadAsync()).Returns(ReturnStringAfterDelayAsync("test expected string test", 10));
+            Session session = new Session(spawnable.Object);
+            bool funcCalled = false;
+
+            Task task = session.ExpectMatchAsync("\\sexpected\\sstring", () => funcCalled = true);
+            task.Wait();
+
+            Assert.IsTrue(funcCalled);
+        }
+
+        [TestMethod]
+        public void BasicExpectMatchAsyncWithOutputTest()
+        {
+            var spawnable = new Mock<ISpawnable>();
+            spawnable.Setup(p => p.ReadAsync()).Returns(ReturnStringAfterDelayAsync("test expected string test", 10));
+            Session session = new Session(spawnable.Object);
+            bool funcCalled = false;
+
+            string output = "";
+            session.ExpectMatchAsync("\\sexpected\\sstring\\s", (s) => { funcCalled = true; output = s; }).Wait();
+
+            Assert.IsTrue(funcCalled);
+            Assert.AreEqual("test expected string test", output);
+        }
+
+        [TestMethod]
         public void SplitResultExpectAsyncTest()
         {
             var spawnable = new Mock<ISpawnable>();
             int i = 0;
-            Task<string>[] tasks = {ReturnStringAfterDelayAsync("test expected ", 100), 
+            Task<string>[] tasks = {ReturnStringAfterDelayAsync("test expected ", 100),
                                      ReturnStringAfterDelayAsync("string test", 150)};
             spawnable.Setup(p => p.ReadAsync()).Returns(() => tasks[i]).Callback(() => i++);
             Session session = new Session(spawnable.Object);
@@ -301,7 +358,7 @@ namespace ExpectNet.Test
         {
             var spawnable = new Mock<ISpawnable>();
             int i = 0;
-            Task<string>[] tasks = {ReturnStringAfterDelayAsync("test expected ", 100), 
+            Task<string>[] tasks = {ReturnStringAfterDelayAsync("test expected ", 100),
                                      ReturnStringAfterDelayAsync("string test", 150)};
             spawnable.Setup(p => p.ReadAsync()).Returns(() => tasks[i]).Callback(() => i++);
             Session session = new Session(spawnable.Object);
@@ -320,7 +377,7 @@ namespace ExpectNet.Test
         {
             var spawnable = new Mock<ISpawnable>();
             int i = 0;
-            Task<string>[] tasks = {ReturnStringAfterDelayAsync("test expected ", 100), 
+            Task<string>[] tasks = {ReturnStringAfterDelayAsync("test expected ", 100),
                                      ReturnStringAfterDelayAsync("string test", 150),
                                    ReturnStringAfterDelayAsync("next expected string", 100)};
             spawnable.Setup(p => p.ReadAsync()).Returns(() => tasks[i]).Callback(() => i++);
@@ -332,5 +389,5 @@ namespace ExpectNet.Test
             Assert.AreEqual("next expected string", output);
         }
     }
-    
+
 }
