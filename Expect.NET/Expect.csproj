@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <RepositoryUrl>https://github.com/lobomelwyn/expect.net</RepositoryUrl>
   </PropertyGroup>
 
 </Project>
