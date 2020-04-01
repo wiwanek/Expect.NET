@@ -1,10 +1,5 @@
-﻿using ExpectNet;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System;
+using ExpectNet;
 
 namespace ExampleApp
 {
@@ -12,75 +7,31 @@ namespace ExampleApp
     {
         static void Main(string[] args)
         {
+            Program p = new Program();
+            p.LinuxExample();
+        }
+
+        public void LinuxExample()
+        {
             try
             {
                 Console.WriteLine("ExampleApp");
-                Session spawn = Expect.Spawn(new ProcessSpawnable("cmd.exe"));
-                spawn.Expect(">", s => Console.WriteLine("got: " + s));
-                spawn.Send("dir c:\\\n");
-                spawn.Expect("Program", (s) => Console.WriteLine("found: " + s));
-                spawn.Send("asdsdf\n");
-                spawn.Expect(">", (s) => Console.WriteLine("found: " + s));
-                spawn.Send("cd c:\\\n");
-                spawn.Expect(@">", s => spawn.Send("cd Users\n"));
-                spawn.Expect(@"c:\\Users>", s => Console.WriteLine("done\n" + s));
-
-                // Expect timeouts examples
-                spawn.Send("ping 8.8.8.8\n");
-                try
-                {
-                    spawn.Expect("Ping statistics", s => Console.WriteLine(s));
-                }
-                catch (System.TimeoutException)
-                {
-                    Console.WriteLine("Timeout 8.8.8.8!");
-                }
-                spawn.Timeout = 5000;
-                spawn.Send("ping 8.8.4.4\n");
-                try
-                {
-                    spawn.Expect("Ping statistics for 8.8.4.4", s => Console.WriteLine(s));
-                    for (int i = 0; i < 6; i++)
-                    {
-                        Console.WriteLine(i);
-                        Thread.Sleep(1000);
-                    }
-                }
-                catch (System.TimeoutException)
-                {
-                    Console.WriteLine("Timeout 8.8.4.4!");
-                }
-
-                Console.WriteLine("Using ExpectAsync");
-                spawn.Send("ping 8.8.8.8\n");
-                spawn.Send("ping google.com\n");
-                try
-                {
-                    spawn.ExpectAsync("Ping statistics for 8.8.8.8", s => Console.WriteLine(s));
-                    for (int i = 0; i < 6; i++)
-                    {
-                        Console.WriteLine(i);
-                        Thread.Sleep(1000);
-                    }
-                    spawn.ExpectAsync("Ping statistics for", s => Console.WriteLine(s));
-                    for (int i = 0; i < 6; i++)
-                    {
-                        Console.WriteLine(i);
-                        Thread.Sleep(1000);
-                    }
+                Session spawn = Expect.Spawn(new ProcessSpawnable("pwsh"));
+                spawn.Expect(">", s => Console.WriteLine(""));
                 
-                }
-                catch (System.TimeoutException)
-                {
-                    Console.WriteLine("Timeout 8.8.8.8!");
-                }
+                spawn.Timeout = 60000;
+                spawn.Send("ping 8.8.8.8 -c 4\n");
+                string output = string.Empty;
+                spawn.Expect("ping statistics", s => output = s);
+                Console.WriteLine(output);
 
+                spawn.Send("dig www.google.com\n");
+                spawn.ExpectMatch(@"^www\.google\.com\.\s*(\d+)\s*(\w{2})\s*\w\s*((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}$",s => Console.WriteLine("got it"));
             }
             catch (Exception e)
             {
                 Console.Error.WriteLine(e);
             }
-            Console.ReadKey();
         }
     }
 }

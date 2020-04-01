@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ExpectNet
@@ -18,7 +14,7 @@ namespace ExpectNet
         private Task<string> _errorRead = null;
         private Task<string> _stdRead = null;
 
-        internal IProcess Process { get { return _process; } }
+        public IProcess Process { get { return _process; } }
 
         /// <summary>
         /// Initializes new ProcessSpawnable instance to handle shell command process
@@ -51,7 +47,7 @@ namespace ExpectNet
             _process = new ProcessAdapter(process);
         }
 
-        internal ProcessSpawnable(IProcess process)
+        public ProcessSpawnable(IProcess process)
         {
             _process = process;
         }

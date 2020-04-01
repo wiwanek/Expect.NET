@@ -1,4 +1,4 @@
-﻿Imports ExpectNET
+Imports ExpectNET
 
 
 Module Module1
